@@ -19,6 +19,7 @@ $user = $userModel->getUserById($_SESSION['user_id']);
 $productController = new ProductController($db);
 $products = $productController->showAllProducts(); // Ambil semua produk
 $categories = $productController->getAllCategories();
+$satuan = $productController->getAllSatuan();
 ?>
 
 <?php
@@ -109,6 +110,7 @@ if (isset($_SESSION['alert'])) {
                                         <th>Nama</th>
                                         <th>Deskripsi</th>
                                         <th>Kategori</th>
+                                        <th>Satuan</th>
                                         <th>Harga</th>
                                         <th>Stok</th>
                                         <th>Aksi</th>
@@ -123,9 +125,10 @@ if (isset($_SESSION['alert'])) {
                                                 <td><?= $counter++; ?></td> <!-- Tampilkan nomor urut -->
                                                 <td><?= htmlspecialchars($product['nama_produk']); ?></td>
                                                 <td><?= htmlspecialchars($product['deskripsi']); ?></td>
+
+                                                <!-- Menampilkan kategori produk -->
                                                 <td>
                                                     <?php
-                                                    // Mengambil nama kategori berdasarkan ID kategori
                                                     $categoryName = '';
                                                     foreach ($categories as $category) {
                                                         if ($category['id_kategori'] == $product['id_kategori']) {
@@ -136,11 +139,26 @@ if (isset($_SESSION['alert'])) {
                                                     echo htmlspecialchars($categoryName);
                                                     ?>
                                                 </td>
+
+                                                <!-- Menampilkan satuan produk -->
+                                                <td>
+                                                    <?php
+                                                    $satuanName = '';
+                                                    foreach ($satuan as $satuanItem) {
+                                                        if ($satuanItem['id_satuan'] == $product['id_satuan']) {
+                                                            $satuanName = $satuanItem['nama_satuan'];
+                                                            break;
+                                                        }
+                                                    }
+                                                    echo htmlspecialchars($satuanName);
+                                                    ?>
+                                                </td>
+
+                                                <!-- Menampilkan harga produk -->
                                                 <td>Rp <?= number_format($product['harga']); ?></td>
                                                 <td><?= htmlspecialchars($product['stok']); ?></td>
                                                 <td>
-                                                    <a href="edit_product.php?id=<?= $product['id_produk']; ?>"
-                                                        class="btn btn-info btn-circle">
+                                                    <a href="edit_product.php?id=<?= $product['id_produk']; ?>" class="btn btn-info btn-circle">
                                                         <i class="fas fa-info-circle"></i>
                                                     </a>
                                                     <button class="btn btn-danger btn-circle" onclick="confirmDelete(<?= $product['id_produk']; ?>)">
@@ -177,7 +195,8 @@ if (isset($_SESSION['alert'])) {
 <script>
     function confirmDelete(productId) {
         Swal.fire({
-            title: "Yakin?",
+            title: "Yakin ingin menghapus produk ini?",
+            text: "Data yang dihapus tidak dapat dikembalikan!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -185,25 +204,24 @@ if (isset($_SESSION['alert'])) {
             confirmButtonText: "Hapus!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Send delete request to the server
-                fetch(`delete_product.php?id=${productId}`, {
+                // Kirim request ke product_actions.php (bukan file terpisah)
+                fetch(`../../controllers/product_actions.php?action=delete&id=${productId}`, {
                         method: 'GET'
                     })
-                    .then(response => response.json())
+                    .then(response => response.json()) // Pastikan PHP mengembalikan JSON
                     .then(data => {
                         if (data.success) {
                             Swal.fire({
-                                title: "Deleted!",
-                                text: "Your product has been deleted.",
+                                title: "Berhasil!",
+                                text: "Produk telah dihapus.",
                                 icon: "success"
                             }).then(() => {
-                                // Reload the page after successful deletion
-                                location.reload();
+                                location.reload(); // Reload halaman setelah berhasil
                             });
                         } else {
                             Swal.fire({
                                 title: "Error!",
-                                text: data.message || "There was an error deleting the product.",
+                                text: data.message || "Terjadi kesalahan saat menghapus produk.",
                                 icon: "error"
                             });
                         }
@@ -211,7 +229,7 @@ if (isset($_SESSION['alert'])) {
                     .catch(error => {
                         Swal.fire({
                             title: "Error!",
-                            text: "There was an error communicating with the server.",
+                            text: "Terjadi kesalahan dalam komunikasi dengan server.",
                             icon: "error"
                         });
                     });

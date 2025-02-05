@@ -112,31 +112,19 @@ CREATE TABLE IF NOT EXISTS `produk` (
   `nama_produk` varchar(100) NOT NULL,
   `deskripsi` text,
   `id_kategori` int NOT NULL,
-  `harga` decimal(10,2) NOT NULL,
+  `id_satuan` int NOT NULL,
+  `harga` decimal(10,0) NOT NULL,
   `stok` int NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_produk`),
   KEY `id_kategori` (`id_kategori`),
-  CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `id_satuan` (`id_satuan`),
+  CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`),
+  CONSTRAINT `produk_ibfk_2` FOREIGN KEY (`id_satuan`) REFERENCES `satuan` (`id_satuan`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table manajemen_madu.produk: ~3 rows (approximately)
-INSERT INTO `produk` (`id_produk`, `nama_produk`, `deskripsi`, `id_kategori`, `harga`, `stok`, `created_at`, `updated_at`) VALUES
-	(1, 'Madu Hutan', 'Madu alami dari hutan tropis', 1, 50000.00, 25, '2025-01-03 18:02:15', '2025-01-03 20:13:29'),
-	(2, 'Madu Kelulut', 'Madu dari lebah kelulut', 2, 70000.00, 15, '2025-01-03 18:02:15', '2025-01-03 18:02:15');
-
--- Dumping structure for table manajemen_madu.produk_supplier
-CREATE TABLE IF NOT EXISTS `produk_supplier` (
-  `id_produk` int NOT NULL,
-  `id_supplier` int NOT NULL,
-  PRIMARY KEY (`id_produk`,`id_supplier`),
-  KEY `id_supplier` (`id_supplier`),
-  CONSTRAINT `produk_supplier_ibfk_1` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`),
-  CONSTRAINT `produk_supplier_ibfk_2` FOREIGN KEY (`id_supplier`) REFERENCES `supplier` (`id_supplier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- Dumping data for table manajemen_madu.produk_supplier: ~0 rows (approximately)
 
 -- Dumping structure for table manajemen_madu.restock
 CREATE TABLE IF NOT EXISTS `restock` (
@@ -155,6 +143,18 @@ CREATE TABLE IF NOT EXISTS `restock` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table manajemen_madu.restock: ~0 rows (approximately)
+
+-- Dumping structure for table manajemen_madu.satuan
+CREATE TABLE IF NOT EXISTS `satuan` (
+  `id_satuan` int NOT NULL AUTO_INCREMENT,
+  `nama_satuan` varchar(50) NOT NULL,
+  `deskripsi` text,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_satuan`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- Dumping data for table manajemen_madu.satuan: ~0 rows (approximately)
 
 -- Dumping structure for table manajemen_madu.supplier
 CREATE TABLE IF NOT EXISTS `supplier` (

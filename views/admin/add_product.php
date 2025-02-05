@@ -2,21 +2,28 @@
 require_once '../../config/database.php';
 require_once '../../controllers/CategoryController.php';
 require_once '../../models/UserModel.php';
-require_once '../../models/ProductModel.php';
+require_once '../../controllers/ProductController.php';  // Pastikan ProductController di-include
 
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
     header("Location: ../auth/login.php");
     exit();
 }
+
 $database = new Database();
 $db = $database->getConnection();
 
+// User Model
 $userModel = new UserModel($db);
 $user = $userModel->getUserById($_SESSION['user_id']);
 
+// Category Controller
 $categoryController = new CategoryController($db);
 $categories = $categoryController->getAllCategories();
+
+// Product Controller - Ambil data satuan
+$productController = new ProductController($db);  // Inisialisasi ProductController
+$satuan = $productController->getAllSatuan();  // Ambil data satuan
 ?>
 
 <div id="wrapper">
@@ -46,6 +53,8 @@ $categories = $categoryController->getAllCategories();
                                 <label for="description">Deskripsi</label>
                                 <textarea class="form-control" id="description" name="description" required></textarea>
                             </div>
+
+                            <!-- Kategori Produk -->
                             <div class="form-group">
                                 <label for="category">Kategori</label>
                                 <select class="form-control" id="category" name="category" required>
@@ -54,6 +63,17 @@ $categories = $categoryController->getAllCategories();
                                         <option value="<?= htmlspecialchars($category['id_kategori']); ?>">
                                             <?= htmlspecialchars($category['nama_kategori']); ?>
                                         </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Satuan Produk -->
+                            <div class="form-group">
+                                <label for="satuan">Satuan Produk</label>
+                                <select class="form-control" id="satuan" name="satuan" required>
+                                    <option value="">Pilih Satuan</option>
+                                    <?php foreach ($satuan as $satuanItem): ?>
+                                        <option value="<?= $satuanItem['id_satuan']; ?>"><?= htmlspecialchars($satuanItem['nama_satuan']); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>

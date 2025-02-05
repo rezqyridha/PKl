@@ -9,24 +9,29 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 $database = new Database();
 $db = $database->getConnection();
 $productController = new ProductController($db);
+$satuan = $productController->getAllSatuan();
 
 if ($action == 'add') {
     // Menangani aksi tambah produk
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $description = isset($_POST['description']) ? $_POST['description'] : '';
     $category = isset($_POST['category']) ? $_POST['category'] : '';
+    $satuan = isset($_POST['satuan']) ? $_POST['satuan'] : ''; // Ambil data satuan
     $price = isset($_POST['price']) ? $_POST['price'] : '';
     $stock = isset($_POST['stock']) ? $_POST['stock'] : '';
 
-    if (!empty($name) && !empty($description) && !empty($category) && !empty($price) && !empty($stock)) {
+    // Validasi input
+    if (!empty($name) && !empty($description) && !empty($category) && !empty($satuan) && !empty($price) && !empty($stock)) {
         $data = [
             'name' => $name,
             'description' => $description,
             'category' => $category,
+            'satuan' => $satuan, // Tambahkan satuan ke data
             'price' => $price,
             'stock' => $stock,
         ];
 
+        // Menambahkan produk
         $result = $productController->addProduct($data);
 
         if ($result) {
@@ -39,7 +44,7 @@ if ($action == 'add') {
             exit();
         }
     } else {
-        $_SESSION['alert'] = 'invalid_input';
+        $_SESSION['alert'] = 'invalid_input'; // Set alert jika input tidak lengkap
         header("Location: ../views/admin/products.php");
         exit();
     }
@@ -89,26 +94,21 @@ if ($action == 'add') {
     $productId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
     if ($productId == 0) {
-        $_SESSION['alert'] = 'invalid_id';
-        header("Location: ../views/admin/products.php");
+        echo json_encode(["success" => false, "message" => "ID produk tidak valid."]);
         exit();
     }
 
     $result = $productController->deleteProduct($productId);
 
     if ($result) {
-        $_SESSION['alert'] = 'deleted';
-        header("Location: ../views/admin/products.php");
-        exit();
+        echo json_encode(["success" => true, "message" => "Produk berhasil dihapus."]);
     } else {
-        $_SESSION['alert'] = 'delete_failed';
-        header("Location: ../views/admin/products.php");
-        exit();
+        echo json_encode(["success" => false, "message" => "Gagal menghapus produk."]);
     }
+    exit();
 } else {
     // Jika aksi tidak valid
     $_SESSION['alert'] = 'invalid_action';
     header("Location: ../views/admin/products.php");
     exit();
 }
-?>

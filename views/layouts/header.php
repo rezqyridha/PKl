@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
 
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="../../assets/css/sb-admin-2.min.css" rel="stylesheet">
     <!-- Include FontAwesome -->
     <link href="../../assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
