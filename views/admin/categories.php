@@ -96,13 +96,13 @@ if (isset($_SESSION['alert'])) {
                 <?php endif; ?>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 text-gray-800">Manage Categories</h1>
+                    <h1 class="h3 text-gray-800">Kelola Kategori</h1>
                     <a href="add_category.php" class="btn btn-primary">Add New Category</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Category List</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">List Kategori</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -110,8 +110,8 @@ if (isset($_SESSION['alert'])) {
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Category Name</th>
-                                        <th>Actions</th>
+                                        <th>Nama Kategori</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -128,7 +128,7 @@ if (isset($_SESSION['alert'])) {
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="3" class="text-center">No categories available.</td>
+                                            <td colspan="3" class="text-center">Kategori Tidak Tersedia.</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
@@ -141,5 +141,3 @@ if (isset($_SESSION['alert'])) {
         <?php include '../layouts/footer.php'; ?>
     </div>
 </div>
-
-

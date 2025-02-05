@@ -34,38 +34,38 @@ if (isset($_SESSION['alert'])) {
 
     if ($_SESSION['alert'] == 'added') {
         echo "Swal.fire({
-            title: 'Good job!',
-            text: 'Product successfully added!',
+            title: 'Berhasil!',
+            text: 'Produk Berhasil DiTambahkan!',
             icon: 'success'
         });";
     } elseif ($_SESSION['alert'] == 'deleted') {
         echo "Swal.fire({
-            title: 'Deleted!',
-            text: 'Product successfully deleted!',
+            title: 'Terhapus!',
+            text: 'Produk Berhasil DiHapus!',
             icon: 'success'
         });";
     } elseif ($_SESSION['alert'] == 'updated') {
         echo "Swal.fire({
-            title: 'Updated!',
-            text: 'Product successfully updated!',
+            title: 'Berhasil!',
+            text: 'Produk Berhasil DiUbah!',
             icon: 'success'
         });";
     } elseif ($_SESSION['alert'] == 'add_failed') {
         echo "Swal.fire({
-            title: 'Failed!',
-            text: 'Failed to add product!',
+            title: 'Gagal!',
+            text: 'Gagal Menambahkan Produk!',
             icon: 'error'
         });";
     } elseif ($_SESSION['alert'] == 'delete_failed') {
         echo "Swal.fire({
             title: 'Failed!',
-            text: 'Failed to delete product!',
+            text: 'Gagal Menghapus Produk!',
             icon: 'error'
         });";
     } elseif ($_SESSION['alert'] == 'update_failed') {
         echo "Swal.fire({
             title: 'Failed!',
-            text: 'Failed to update product!',
+            text: 'Gagal Mengubah Produk!',
             icon: 'error'
         });";
     }
@@ -74,11 +74,6 @@ if (isset($_SESSION['alert'])) {
     unset($_SESSION['alert']); // Hapus session alert setelah ditampilkan
 }
 ?>
-
-
-
-
-
 
 
 <div id="wrapper">
@@ -96,14 +91,14 @@ if (isset($_SESSION['alert'])) {
             <div class="container-fluid">
                 <!-- Page Heading -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 text-gray-800">Manage Products</h1>
-                    <a href="add_product.php" class="btn btn-primary">Add New Product</a>
+                    <h1 class="h3 text-gray-800">Kelola Produk</h1>
+                    <a href="add_product.php" class="btn btn-primary">Tambah Produk Baru</a>
                 </div>
 
                 <!-- Products Table -->
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Products List</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Daftar Produk</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -111,49 +106,55 @@ if (isset($_SESSION['alert'])) {
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Category</th>
-                                        <th>Price</th>
-                                        <th>Stock</th>
-                                        <th>Actions</th>
+                                        <th>Nama</th>
+                                        <th>Deskripsi</th>
+                                        <th>Kategori</th>
+                                        <th>Harga</th>
+                                        <th>Stok</th>
+                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (!empty($products)): ?>
-                                    <?php $counter = 1; // Inisialisasi nomor urut ?>
-                                    <?php foreach ($products as $product): ?>
-                                        <tr>
-                                        <td><?= $counter++; ?></td> <!-- Tampilkan nomor urut -->
-                                            <td><?= htmlspecialchars($product['nama_produk']); ?></td>
-                                            <td><?= htmlspecialchars($product['deskripsi']); ?></td>
-                                            <td>
-                                                <?php
-                                                // Mengambil nama kategori berdasarkan ID kategori
-                                                $categoryName = '';
-                                                foreach ($categories as $category) {
-                                                    if ($category['id_kategori'] == $product['id_kategori']) {
-                                                        $categoryName = $category['nama_kategori'];
-                                                        break;
+                                    <?php if (!empty($products)): ?>
+                                        <?php $counter = 1; // Inisialisasi nomor urut 
+                                        ?>
+                                        <?php foreach ($products as $product): ?>
+                                            <tr>
+                                                <td><?= $counter++; ?></td> <!-- Tampilkan nomor urut -->
+                                                <td><?= htmlspecialchars($product['nama_produk']); ?></td>
+                                                <td><?= htmlspecialchars($product['deskripsi']); ?></td>
+                                                <td>
+                                                    <?php
+                                                    // Mengambil nama kategori berdasarkan ID kategori
+                                                    $categoryName = '';
+                                                    foreach ($categories as $category) {
+                                                        if ($category['id_kategori'] == $product['id_kategori']) {
+                                                            $categoryName = $category['nama_kategori'];
+                                                            break;
+                                                        }
                                                     }
-                    }
-                    echo htmlspecialchars($categoryName);
-                    ?>
-                </td>
-                <td>Rp <?= number_format($product['harga']); ?></td>
-                <td><?= htmlspecialchars($product['stok']); ?></td>
-                <td>
-                    <a href="edit_product.php?id=<?= $product['id_produk']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                    <button class="btn btn-danger btn-sm" onclick="confirmDelete(<?= $product['id_produk']; ?>)">Delete</button>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="7" class="text-center">No products available.</td>
-        </tr>
-    <?php endif; ?>
-</tbody>
+                                                    echo htmlspecialchars($categoryName);
+                                                    ?>
+                                                </td>
+                                                <td>Rp <?= number_format($product['harga']); ?></td>
+                                                <td><?= htmlspecialchars($product['stok']); ?></td>
+                                                <td>
+                                                    <a href="edit_product.php?id=<?= $product['id_produk']; ?>"
+                                                        class="btn btn-info btn-circle">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger btn-circle" onclick="confirmDelete(<?= $product['id_produk']; ?>)">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="7" class="text-center">Tidak ada produk yang tersedia.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
 
                             </table>
                         </div>
@@ -170,3 +171,51 @@ if (isset($_SESSION['alert'])) {
     <!-- End Content Wrapper -->
 </div>
 <!-- End Wrapper -->
+
+
+<!-- Script Delete -->
+<script>
+    function confirmDelete(productId) {
+        Swal.fire({
+            title: "Yakin?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Send delete request to the server
+                fetch(`delete_product.php?id=${productId}`, {
+                        method: 'GET'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your product has been deleted.",
+                                icon: "success"
+                            }).then(() => {
+                                // Reload the page after successful deletion
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Error!",
+                                text: data.message || "There was an error deleting the product.",
+                                icon: "error"
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "There was an error communicating with the server.",
+                            icon: "error"
+                        });
+                    });
+            }
+        });
+    }
+</script>

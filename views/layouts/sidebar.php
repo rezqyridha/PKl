@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Madu Management</div>
+        <div class="sidebar-brand-text mx-3">Managemen & Penjualan Madu</div>
     </a>
 
     <!-- Divider -->
@@ -24,73 +24,46 @@
 
     <!-- Manage Menu -->
     <div class="sidebar-heading">
-        Manage
+        Kelola
     </div>
 
-    <!-- Manage Products -->
+    <!-- Nav Item - Pages Collapse Menu -->
     <li class="nav-item">
-        <a class="nav-link" href="../admin/products.php">
-            <i class="fas fa-fw fa-boxes"></i>
-            <span>Manage Products</span>
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseKelola"
+            aria-expanded="true" aria-controls="collapseKelola">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Pengelolaan</span>
         </a>
-    </li>
+        <div id="collapseKelola" class="collapse" aria-labelledby="headingKelola" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Pengelolaan</h6>
+                <a class="collapse-item" href=" ../admin/products.php">Kelola Produk</a>
+                <a class="collapse-item" href="../admin/sales.php">Kelola Penjualan</a>
+                <a class="collapse-item" href="../admin/restock.php">Kelola Restock</a>
+                <a class="collapse-item" href="../admin/categories.php">Kelola Kategori</a>
+                <a class="collapse-item" href="../admin/customers.php">Kelola Pelanggan</a>
+                <a class="collapse-item" href="../admin/suppliers.php">Kelola Supplier</a>
+            </div>
+        </div>
 
-    <!-- Manage Categories -->
-    <li class="nav-item">
-        <a class="nav-link" href="../admin/categories.php">
-            <i class="fas fa-fw fa-tags"></i>
-            <span>Manage Categories</span>
-        </a>
-    </li>
 
-    <!-- Manage Customers -->
-    <li class="nav-item">
-        <a class="nav-link" href="../admin/customers.php">
-            <i class="fas fa-fw fa-user-friends"></i>
-            <span>Manage Customers</span>
-        </a>
-    </li>
+        <!-- Divider -->
+        <hr class="sidebar-divider">
 
-    <!-- Manage Suppliers -->
-    <li class="nav-item">
-        <a class="nav-link" href="../admin/suppliers.php">
-            <i class="fas fa-fw fa-truck"></i>
-            <span>Manage Suppliers</span>
-        </a>
-    </li>
-
-    <!-- Manage Restocks -->
-    <li class="nav-item">
-        <a class="nav-link" href="../admin/restocks.php">
-            <i class="fas fa-fw fa-warehouse"></i>
-            <span>Manage Restocks</span>
-        </a>
-    </li>
-
-    <!-- Manage Sales -->
-    <li class="nav-item">
-        <a class="nav-link" href="../admin/sales.php">
-            <i class="fas fa-fw fa-chart-line"></i>
-            <span>Manage Sales</span>
-        </a>
-    </li>
-
-    <!-- Manage Logs -->
-    <li class="nav-item">
-        <a class="nav-link" href="../admin/logs.php">
-            <i class="fas fa-fw fa-history"></i>
-            <span>Manage Logs</span>
-        </a>
-    </li>
-
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Logout -->
+        <!-- Logout -->
     <li class="nav-item">
         <a class="nav-link" href="../auth/logout.php">
             <i class="fas fa-fw fa-sign-out-alt"></i>
             <span>Logout</span>
         </a>
     </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider d-none d-md-block">
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+
 </ul>
