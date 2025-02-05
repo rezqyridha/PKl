@@ -18,11 +18,7 @@ class ProductController
     {
         try {
             // Memanggil model untuk mengambil produk
-            $products = $this->productModel->getAllProducts();
-            if (!$products) {
-                return [];  // Kembalikan array kosong jika tidak ada produk
-            }
-            return $products;
+            return $this->productModel->getAllProducts();  // Memanggil fungsi yang sudah ada di model
         } catch (Exception $e) {
             error_log("Terjadi kesalahan saat mengambil produk: " . $e->getMessage());
             return [];  // Kembalikan array kosong jika ada error
@@ -74,22 +70,17 @@ class ProductController
 
     public function getAllCategories()
     {
-        $query = "SELECT id_kategori, nama_kategori FROM kategori";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->productModel->getAllCategories();  // Mengambil kategori dari model
     }
 
     public function getAllSatuan()
     {
-        return $this->productModel->getAllSatuan();
+        return $this->productModel->getAllSatuan();  // Mengambil satuan dari model
     }
-
 
     public function addProduct($data)
     {
-        return $this->productModel->addProduct($data);
+        return $this->productModel->addProduct($data);  // Memanggil fungsi addProduct di model
     }
 
     public function editProduct($id, $data)

@@ -21,7 +21,6 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Mengambil semua kategori
     public function getAllCategories()
     {
         $query = "SELECT * FROM kategori";
@@ -30,7 +29,6 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Mengambil semua satuan
     public function getAllSatuan()
     {
         $query = "SELECT * FROM satuan";
@@ -38,6 +36,7 @@ class ProductModel
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     public function getProductById($id)
     {

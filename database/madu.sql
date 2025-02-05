@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `kategori` (
   PRIMARY KEY (`id_kategori`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.kategori: ~5 rows (approximately)
+-- Dumping data for table manajemen_madu.kategori: ~6 rows (approximately)
 INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES
 	(1, 'Hutan'),
 	(2, 'Kelulut'),
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `pelanggan` (
   PRIMARY KEY (`id_pelanggan`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.pelanggan: ~4 rows (approximately)
+-- Dumping data for table manajemen_madu.pelanggan: ~5 rows (approximately)
 INSERT INTO `pelanggan` (`id_pelanggan`, `nama_pelanggan`, `kontak`, `alamat`, `kota`, `provinsi`, `created_at`, `updated_at`) VALUES
 	(1, 'John Doe', '081234567899', 'Jalan Raya No. 123', 'Jakarta', 'DKI Jakarta', '2025-01-02 09:25:44', '2025-01-02 09:25:44'),
 	(2, 'Jane Smith', '081234567898', 'Jalan Melati No. 456', 'Bandung', 'Jawa Barat', '2025-01-02 09:25:44', '2025-01-02 09:25:44'),
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `pengguna` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.pengguna: ~0 rows (approximately)
+-- Dumping data for table manajemen_madu.pengguna: ~1 rows (approximately)
 INSERT INTO `pengguna` (`id_pengguna`, `username`, `password`, `nama_lengkap`, `email`, `kontak`, `role`) VALUES
 	(1, 'admin', '$2y$10$4XAZcOa.PgnSaFxVS8QoWebIv42L3mbUIA04ueAc/aZ4gpH0e39lG', 'Admin 1', 'admin1@example.com', '081234567890', 'admin');
 
@@ -124,7 +124,13 @@ CREATE TABLE IF NOT EXISTS `produk` (
   CONSTRAINT `produk_ibfk_2` FOREIGN KEY (`id_satuan`) REFERENCES `satuan` (`id_satuan`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.produk: ~3 rows (approximately)
+-- Dumping data for table manajemen_madu.produk: ~5 rows (approximately)
+INSERT INTO `produk` (`id_produk`, `nama_produk`, `deskripsi`, `id_kategori`, `id_satuan`, `harga`, `stok`, `created_at`, `updated_at`) VALUES
+	(13, 'Madu Hutan', 'Madu hutan murni dengan kualitas terbaik', 1, 1, 150000, 50, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
+	(14, 'Madu Kelulut', 'Madu kelulut alami, berkhasiat untuk kesehatan', 2, 1, 200000, 30, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
+	(15, 'Madu Pahit', 'Madu pahit untuk kesehatan, kaya antioksidan', 3, 3, 180000, 20, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
+	(16, 'Madu Spesial', 'Madu premium, khasiat ganda', 1, 4, 220000, 10, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
+	(17, 'Madu Obat', 'Madu obat untuk meningkatkan stamina', 4, 5, 250000, 25, '2025-02-05 10:39:20', '2025-02-05 10:39:20');
 
 -- Dumping structure for table manajemen_madu.restock
 CREATE TABLE IF NOT EXISTS `restock` (
@@ -154,7 +160,13 @@ CREATE TABLE IF NOT EXISTS `satuan` (
   PRIMARY KEY (`id_satuan`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.satuan: ~0 rows (approximately)
+-- Dumping data for table manajemen_madu.satuan: ~5 rows (approximately)
+INSERT INTO `satuan` (`id_satuan`, `nama_satuan`, `deskripsi`, `created_at`, `updated_at`) VALUES
+	(1, '50 ml', 'Botol kecil ukuran 50 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
+	(2, '100 ml', 'Botol sedang ukuran 100 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
+	(3, '250 ml', 'Botol besar ukuran 250 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
+	(4, '500 ml', 'Botol ukuran 500 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
+	(5, '1 liter', 'Botol ukuran 1 liter', '2025-02-05 10:30:52', '2025-02-05 10:30:52');
 
 -- Dumping structure for table manajemen_madu.supplier
 CREATE TABLE IF NOT EXISTS `supplier` (
@@ -167,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `supplier` (
   PRIMARY KEY (`id_supplier`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.supplier: ~3 rows (approximately)
+-- Dumping data for table manajemen_madu.supplier: ~4 rows (approximately)
 INSERT INTO `supplier` (`id_supplier`, `nama_supplier`, `kontak_supplier`, `alamat_supplier`, `created_at`, `updated_at`) VALUES
 	(1, 'budi', '02065001', 'Jl.Api', '2025-01-03 22:19:14', '2025-01-03 22:19:14'),
 	(2, 'Randi', '5848945515', 'Jl. Air', '2025-01-04 03:31:23', '2025-01-04 03:31:23'),

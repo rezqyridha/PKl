@@ -16,6 +16,9 @@ $productController = new ProductController($db);
 $userModel = new UserModel($db);
 $user = $userModel->getUserById($_SESSION['user_id']);
 
+$categories = $productController->getAllCategories();
+$satuan = $productController->getAllSatuan();
+
 $id = $_GET['id'] ?? null;
 if (!$id) {
     header("Location: products.php?error=invalid_request");
@@ -28,8 +31,7 @@ if (!$product) {
     exit();
 }
 
-// Get all categories
-$categories = $productController->getAllCategories();
+
 ?>
 
 
@@ -66,6 +68,16 @@ $categories = $productController->getAllCategories();
                                     <?php foreach ($categories as $category): ?>
                                         <option value="<?= $category['id_kategori']; ?>" <?= $product['id_kategori'] == $category['id_kategori'] ? 'selected' : ''; ?>>
                                             <?= htmlspecialchars($category['nama_kategori']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="satuan">Satuan</label>
+                                <select class="form-control" id="satuan" name="satuan" required>
+                                    <?php foreach ($satuan as $satuanItem): ?>
+                                        <option value="<?= $satuanItem['id_satuan']; ?>" <?= $product['id_satuan'] == $satuanItem['id_satuan'] ? 'selected' : ''; ?>>
+                                            <?= htmlspecialchars($satuanItem['nama_satuan']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>

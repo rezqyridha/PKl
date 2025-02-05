@@ -35,42 +35,41 @@ if (isset($_SESSION['alert'])) {
 
     if ($_SESSION['alert'] == 'added') {
         echo "Swal.fire({
-            title: 'Berhasil!',
-            text: 'Produk Berhasil DiTambahkan!',
-            icon: 'success'
-        });";
+        title: 'Berhasil!',
+        text: 'Produk berhasil ditambahkan!',
+        icon: 'success'
+    });";
     } elseif ($_SESSION['alert'] == 'deleted') {
         echo "Swal.fire({
-            title: 'Terhapus!',
-            text: 'Produk Berhasil DiHapus!',
-            icon: 'success'
-        });";
+        title: 'Terhapus!',
+        text: 'Produk berhasil dihapus!',
+        icon: 'success'
+    });";
     } elseif ($_SESSION['alert'] == 'updated') {
         echo "Swal.fire({
-            title: 'Berhasil!',
-            text: 'Produk Berhasil DiUbah!',
-            icon: 'success'
-        });";
+        title: 'Berhasil!',
+        text: 'Produk berhasil diubah!',
+        icon: 'success'
+    });";
     } elseif ($_SESSION['alert'] == 'add_failed') {
         echo "Swal.fire({
-            title: 'Gagal!',
-            text: 'Gagal Menambahkan Produk!',
-            icon: 'error'
-        });";
+        title: 'Gagal!',
+        text: 'Gagal menambahkan produk!',
+        icon: 'error'
+    });";
     } elseif ($_SESSION['alert'] == 'delete_failed') {
         echo "Swal.fire({
-            title: 'Failed!',
-            text: 'Gagal Menghapus Produk!',
-            icon: 'error'
-        });";
+        title: 'Gagal!',
+        text: 'Gagal menghapus produk!',
+        icon: 'error'
+    });";
     } elseif ($_SESSION['alert'] == 'update_failed') {
         echo "Swal.fire({
-            title: 'Failed!',
-            text: 'Gagal Mengubah Produk!',
-            icon: 'error'
-        });";
+        title: 'Gagal!',
+        text: 'Gagal mengubah produk!',
+        icon: 'error'
+    });";
     }
-
     echo "});</script>";
     unset($_SESSION['alert']); // Hapus session alert setelah ditampilkan
 }
