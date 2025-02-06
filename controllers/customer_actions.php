@@ -4,64 +4,112 @@ require_once 'CustomerController.php';
 
 session_start();
 
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+
 $database = new Database();
 $db = $database->getConnection();
 $customerController = new CustomerController($db);
 
-$action = isset($_GET['action']) ? $_GET['action'] : '';
-
+// Menangani aksi tambah pelanggan
 if ($action == 'add') {
-    $data = [
-        'nama_pelanggan' => $_POST['nama_pelanggan'] ?? '',
-        'kontak' => $_POST['kontak'] ?? '',
-        'alamat' => $_POST['alamat'] ?? '',
-        'kota' => $_POST['kota'] ?? '',
-        'provinsi' => $_POST['provinsi'] ?? ''
-    ];
+    $nama_pelanggan = isset($_POST['nama_pelanggan']) ? $_POST['nama_pelanggan'] : '';
+    $kontak = isset($_POST['kontak']) ? $_POST['kontak'] : '';
+    $alamat = isset($_POST['alamat']) ? $_POST['alamat'] : '';
+    $kota = isset($_POST['kota']) ? $_POST['kota'] : '';
+    $provinsi = isset($_POST['provinsi']) ? $_POST['provinsi'] : '';
 
-    $result = $customerController->addCustomer($data);
+    // Validasi input
+    if (!empty($nama_pelanggan) && !empty($kontak) && !empty($alamat) && !empty($kota) && !empty($provinsi)) {
+        $data = [
+            'nama_pelanggan' => $nama_pelanggan,
+            'kontak' => $kontak,
+            'alamat' => $alamat,
+            'kota' => $kota,
+            'provinsi' => $provinsi
+        ];
 
-    if ($result) {
-        header("Location: ../views/admin/customers.php?success=added");
-    } else {
-        header("Location: ../views/admin/customers.php?error=add_failed");
-    }
-    exit();
-}
-
-if ($action == 'edit') {
-    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-    $data = [
-        'nama_pelanggan' => $_POST['nama_pelanggan'] ?? '',
-        'kontak' => $_POST['kontak'] ?? '',
-        'alamat' => $_POST['alamat'] ?? '',
-        'kota' => $_POST['kota'] ?? '',
-        'provinsi' => $_POST['provinsi'] ?? ''
-    ];
-
-    $result = $customerController->editCustomer($id, $data);
-
-    if ($result) {
-        header("Location: ../views/admin/customers.php?success=updated");
-    } else {
-        header("Location: ../views/admin/customers.php?error=update_failed");
-    }
-    exit();
-}
-
-if ($action == 'delete') {
-    $customerId = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-    if ($customerId > 0) {
-        $result = $customerController->deleteCustomer($customerId);
+        // Menambahkan pelanggan menggunakan CustomerController
+        $result = $customerController->addCustomer($data);
         if ($result) {
-            header("Location: ../views/admin/customers.php?success=deleted");
+            $_SESSION['alert'] = 'added';
+            header("Location: ../views/admin/customers.php");
+            exit();
         } else {
-            header("Location: ../views/admin/customers.php?error=delete_failed");
+            $_SESSION['alert'] = 'add_failed';
+            header("Location: ../views/admin/customers.php");
+            exit();
         }
     } else {
-        header("Location: ../views/admin/customers.php?error=invalid_id");
+        $_SESSION['alert'] = 'invalid_input';
+        header("Location: ../views/admin/customers.php");
+        exit();
+    }
+}
+
+// Menangani aksi edit pelanggan
+elseif ($action == 'edit') {
+    $customerId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+    if ($customerId == 0) {
+        $_SESSION['alert'] = 'invalid_id';
+        header("Location: ../views/admin/customers.php");
+        exit();
+    }
+
+    $nama_pelanggan = isset($_POST['nama_pelanggan']) ? $_POST['nama_pelanggan'] : '';
+    $kontak = isset($_POST['kontak']) ? $_POST['kontak'] : '';
+    $alamat = isset($_POST['alamat']) ? $_POST['alamat'] : '';
+    $kota = isset($_POST['kota']) ? $_POST['kota'] : '';
+    $provinsi = isset($_POST['provinsi']) ? $_POST['provinsi'] : '';
+
+    // Validasi input
+    if (!empty($nama_pelanggan) && !empty($kontak) && !empty($alamat) && !empty($kota) && !empty($provinsi) && !empty($stock)) {
+        $data = [
+            'nama_pelanggan' => $nama_pelanggan,
+            'kontak' => $kontak,
+            'alamat' => $alamat,
+            'kota' => $kota,
+            'provinsi' => $provinsi,
+        ];
+
+        $result = $customerController->editCustomer($customerId, $data);
+
+        if ($result) {
+            $_SESSION['alert'] = 'updated'; // Set session untuk alert
+            header("Location: ../views/admin/customers.php");
+            exit();
+        } else {
+            $_SESSION['alert'] = 'updated_failed';
+            header("Location: ../views/admin/customers.php");
+            exit();
+        }
+    } else {
+        $_SESSION['alert'] = 'invalid_input';
+        header("Location: ../views/admin/customers.php");
+        exit();
+    }
+}
+
+// Menangani aksi hapus pelanggan
+elseif ($action == 'delete') {
+    $customerId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+    if ($customerId == 0) {
+        echo json_encode(["success" => false, "message" => "ID Pelanggan tidak valid."]);
+        exit();
+    }
+
+    $result = $customerController->deleteCustomer($customerId);
+
+    if ($result) {
+        echo json_encode(["success" => true, "message" => "Pelanggan berhasil dihapus."]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Gagal menghapus pelanggan."]);
     }
     exit();
+} else {
+    // Jika aksi tidak valid
+    $_SESSION['alert'] = 'invalid_action';
+    header("Location: ../views/admin/customers.php");
+    exit();
 }
-?>

@@ -32,7 +32,6 @@ if (session_status() == PHP_SESSION_NONE) {
 if (isset($_SESSION['alert'])) {
     echo "<script>
         document.addEventListener('DOMContentLoaded', function () {";
-
     if ($_SESSION['alert'] == 'added') {
         echo "Swal.fire({
         title: 'Berhasil!',
@@ -117,11 +116,11 @@ if (isset($_SESSION['alert'])) {
                                 </thead>
                                 <tbody>
                                     <?php if (!empty($products)): ?>
-                                        <?php $counter = 1; // Inisialisasi nomor urut 
+                                        <?php $no = 1; // Inisialisasi nomor urut 
                                         ?>
                                         <?php foreach ($products as $product): ?>
                                             <tr>
-                                                <td><?= $counter++; ?></td> <!-- Tampilkan nomor urut -->
+                                                <td><?= $no++; ?></td> <!-- Tampilkan nomor urut -->
                                                 <td><?= htmlspecialchars($product['nama_produk']); ?></td>
                                                 <td><?= htmlspecialchars($product['deskripsi']); ?></td>
 
@@ -157,10 +156,12 @@ if (isset($_SESSION['alert'])) {
                                                 <td>Rp <?= number_format($product['harga']); ?></td>
                                                 <td><?= htmlspecialchars($product['stok']); ?></td>
                                                 <td>
-                                                    <a href="edit_product.php?id=<?= $product['id_produk']; ?>" class="btn btn-info btn-circle">
+                                                    <a href="edit_product.php?id=<?= $product['id_produk']; ?>"
+                                                        class="btn btn-info btn-circle">
                                                         <i class="fas fa-info-circle"></i>
                                                     </a>
-                                                    <button class="btn btn-danger btn-circle" onclick="confirmDelete(<?= $product['id_produk']; ?>)">
+                                                    <button class="btn btn-danger btn-circle"
+                                                        onclick="confirmDelete(<?= $product['id_produk']; ?>)">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>

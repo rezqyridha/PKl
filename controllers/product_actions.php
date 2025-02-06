@@ -15,7 +15,7 @@ if ($action == 'add') {
     $name = isset($_POST['name']) ? $_POST['name'] : '';
     $description = isset($_POST['description']) ? $_POST['description'] : '';
     $category = isset($_POST['category']) ? $_POST['category'] : '';
-    $satuan = isset($_POST['satuan']) ? $_POST['satuan'] : '';  // Ambil data satuan
+    $satuan = isset($_POST['satuan']) ? $_POST['satuan'] : '';
     $price = isset($_POST['price']) ? $_POST['price'] : '';
     $stock = isset($_POST['stock']) ? $_POST['stock'] : '';
 
@@ -94,7 +94,7 @@ elseif ($action == 'edit') {
     }
 }
 
-// Menangani aksi delete produk
+// Menangani aksi hapus produk
 elseif ($action == 'delete') {
     $productId = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
