@@ -76,11 +76,11 @@ $provinsi = [
                         <form action="../../controllers/customer_actions.php?action=add" method="POST">
                             <div class="form-group">
                                 <label for="nama_pelanggan">Nama Pelanggan</label>
-                                <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" required>
+                                <input type="text" class="form-control" id="nama_pelanggan" name="nama_pelanggan" placeholder="Masukkan nama lengkap pelanggan" required>
                             </div>
                             <div class="form-group">
                                 <label for="kontak">Kontak</label>
-                                <input type="text" class="form-control" id="kontak" name="kontak" placeholder="Masukkan kontak pelanggan" required>
+                                <input type="text" class="form-control" id="kontak" name="kontak" placeholder="Masukkan nomor kontak (08XXXXXXXXXX)" required>
                             </div>
                             <div class="form-group">
                                 <label for="alamat">Alamat</label>
@@ -88,14 +88,18 @@ $provinsi = [
                             </div>
                             <div class="form-group">
                                 <label for="kota">Kota</label>
-                                <input type="text" class="form-control" id="kota" name="kota" placeholder="Masukkan kota pelanggan" required>
+                                <input type="text" class="form-control" id="kota" name="kota" placeholder="Masukkan nama kota pelanggan" required>
                             </div>
                             <div class="form-group">
                                 <label for="provinsi">Provinsi</label>
                                 <select class="form-control" id="provinsi" name="provinsi" required>
-                                    <?php foreach ($provinsi as $prov) { ?>
-                                        <option value="<?php echo $prov; ? >">-- Pilih Provinsi Anda --</option>
-                                    <?php } ?>
+                                    <option value="">-- Pilih Provinsi --</option>
+                                    <?php
+                                    // Loop through the $provinsi array and create an option for each province
+                                    foreach ($provinsi as $prov) {
+                                        echo "<option value=\"$prov\">$prov</option>";
+                                    }
+                                    ?>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Tambah Pelanggan</button>

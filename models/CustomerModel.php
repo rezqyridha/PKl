@@ -66,20 +66,34 @@ class CustomerModel
 
     public function updateCustomer($id, $data)
     {
-        $query = "UPDATE pelanggan 
+        try {
+            $query = "UPDATE pelanggan 
                   SET nama_pelanggan = :nama_pelanggan, kontak = :kontak, alamat = :alamat, 
                       kota = :kota, provinsi = :provinsi
                   WHERE id_pelanggan = :id";
 
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':nama_pelanggan', $data['nama_pelanggan']);
-        $stmt->bindParam(':kontak', $data['kontak']);
-        $stmt->bindParam(':alamat', $data['alamat']);
-        $stmt->bindParam(':kota', $data['kota']);
-        $stmt->bindParam(':provinsi', $data['provinsi']);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        return $stmt->execute();
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':nama_pelanggan', $data['nama_pelanggan']);
+            $stmt->bindParam(':kontak', $data['kontak']);
+            $stmt->bindParam(':alamat', $data['alamat']);
+            $stmt->bindParam(':kota', $data['kota']);
+            $stmt->bindParam(':provinsi', $data['provinsi']);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+            $stmt->execute();
+
+            // Periksa apakah ada baris yang diperbarui
+            if ($stmt->rowCount() > 0) {
+                return true; // Data berubah
+            } else {
+                return false; // Tidak ada perubahan
+            }
+        } catch (PDOException $e) {
+            error_log("Gagal mengupdate pelanggan: " . $e->getMessage());
+            return false;
+        }
     }
+
 
 
     public function deleteCustomer($id)

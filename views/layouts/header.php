@@ -5,15 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <!-- Include SB Admin CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <!-- CSS Custom File  -->
+    <link rel="stylesheet" href="../../assets/css/custom.css">
 
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="../../assets/css/sb-admin-2.min.css" rel="stylesheet">
-    <!-- Include FontAwesome -->
-    <link href="../../assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+    <!-- Include jQuery (pastikan dimuat terlebih dahulu sebelum DataTables) -->
+    <script src="../../assets/vendor/jquery/jquery.min.js"></script>
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="../../assets/vendor/datatables/dataTables.bootstrap4.min.css">
+
+    <!-- SB Admin 2 CSS -->
+    <link rel="stylesheet" href="../../assets/css/sb-admin-2.min.css">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="../../assets/vendor/fontawesome-free/css/all.min.css">
 </head>
+
 
 <body>
     <!-- Topbar -->
@@ -28,7 +35,39 @@
         </button>
 
         <!-- Topbar Navbar -->
+        <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <div class="input-group">
+                <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                    aria-label="Search" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="button">
+                        <i class="fas fa-search fa-sm"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+
         <ul class="navbar-nav ml-auto">
+            <!-- Notifikasi Pesanan Baru Next fitur
+            <li class="nav-item dropdown no-arrow mx-1">
+                <a class="nav-link dropdown-toggle" href="#" id="ordersDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-shopping-basket fa-fw"></i>
+                    <span class="badge badge-danger badge-counter">5+</span> // Jumlah pesanan baru 
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="ordersDropdown">
+                <h6 class="dropdown-header">Pesanan Baru</h6>
+                <a class="dropdown-item d-flex align-items-center" href="../admin/orders.php">
+                    <div class="dropdown-list-image mr-3">
+                        <i class="fas fa-box-open text-primary"></i>
+                    </div>
+                    <div>
+                        <span class="font-weight-bold">Ada 5 pesanan baru</span>
+                    </div>
+                </a>
+                <a class="dropdown-item text-center small text-gray-500" href="../admin/orders.php">Lihat Semua Pesanan</a>
+            </div>
+            </li> -->
+
             <!-- User Information -->
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

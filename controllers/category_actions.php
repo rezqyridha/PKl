@@ -1,5 +1,4 @@
 <?php
-
 require_once '../config/database.php';
 require_once '../controllers/CategoryController.php';
 
@@ -11,52 +10,44 @@ $database = new Database();
 $db = $database->getConnection();
 $categoryController = new CategoryController($db);
 
-if ($action === 'add') {
-    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+if ($action == 'add') {
+    $nama_kategori = isset($_POST['nama_kategori']) ? $_POST['nama_kategori'] : '';
 
-    if (empty($name)) {
-        $_SESSION['error'] = "Category name cannot be empty.";
-        header("Location: ../views/admin/add_category.php");
-        exit();
-    }
+    if (!empty($nama_kategori)) {
+        $data = ['nama_kategori' => $nama_kategori];
 
-    if ($categoryController->isCategoryExists($name)) {
-        $_SESSION['error'] = "Category with the same name already exists.";
-        header("Location: ../views/admin/add_category.php");
-        exit();
-    }
-
-    $result = $categoryController->addCategory($name);
-
-    if ($result) {
-        $_SESSION['success'] = "Category successfully added!";
-        header("Location: ../views/admin/categories.php");
+        $result = $categoryController->addCategory($data);
+        $_SESSION['alert'] = $result ? 'added' : 'failed';
     } else {
-        $_SESSION['error'] = "Failed to add category.";
-        header("Location: ../views/admin/add_category.php");
-    }
-    exit();
-} elseif ($action === 'delete') {
-    $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
-
-    if ($id <= 0) {
-        $_SESSION['error'] = "Invalid category ID.";
-        header("Location: ../views/admin/categories.php");
-        exit();
-    }
-
-    $result = $categoryController->deleteCategory($id);
-
-    if ($result) {
-        $_SESSION['success'] = "Category successfully deleted!";
-    } else {
-        $_SESSION['error'] = "Cannot delete category. Make sure it has no related products.";
+        $_SESSION['alert'] = 'failed';
     }
     header("Location: ../views/admin/categories.php");
     exit();
+} elseif ($action == 'edit') {
+    $categoryId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    $nama_kategori = isset($_POST['nama_kategori']) ? $_POST['nama_kategori'] : '';
+
+    if ($categoryId > 0 && !empty($nama_kategori)) {
+        $data = ['nama_kategori' => $nama_kategori];
+        $result = $categoryController->updateCategory($categoryId, $data);
+        $_SESSION['alert'] = $result ? 'updated' : 'failed';
+    } else {
+        $_SESSION['alert'] = 'failed';
+    }
+    header("Location: ../views/admin/categories.php");
+    exit();
+} elseif ($action == 'delete') {
+    $categoryId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+    if ($categoryId > 0) {
+        $result = $categoryController->deleteCategory($categoryId);
+        echo json_encode(["success" => $result, "message" => $result ? "Kategori berhasil dihapus." : "Gagal menghapus kategori."]);
+    } else {
+        echo json_encode(["success" => false, "message" => "ID tidak valid."]);
+    }
+    exit();
 } else {
-    $_SESSION['error'] = "Invalid action.";
+    $_SESSION['alert'] = 'failed';
     header("Location: ../views/admin/categories.php");
     exit();
 }
-?>

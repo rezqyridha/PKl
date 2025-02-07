@@ -23,15 +23,16 @@ $satuan = $productController->getAllSatuan();
 ?>
 
 <?php
-// Cek apakah session sudah dimulai
+// Pastikan session dimulai sebelum digunakan
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Tampilkan alert berdasarkan session
+// Menampilkan SweetAlert berdasarkan session alert
 if (isset($_SESSION['alert'])) {
     echo "<script>
         document.addEventListener('DOMContentLoaded', function () {";
+
     if ($_SESSION['alert'] == 'added') {
         echo "Swal.fire({
         title: 'Berhasil!',
@@ -47,20 +48,14 @@ if (isset($_SESSION['alert'])) {
     } elseif ($_SESSION['alert'] == 'updated') {
         echo "Swal.fire({
         title: 'Berhasil!',
-        text: 'Produk berhasil diubah!',
+        text: 'Produk berhasil diperbarui!',
         icon: 'success'
     });";
-    } elseif ($_SESSION['alert'] == 'add_failed') {
+    } elseif ($_SESSION['alert'] == 'no_change') {
         echo "Swal.fire({
-        title: 'Gagal!',
-        text: 'Gagal menambahkan produk!',
-        icon: 'error'
-    });";
-    } elseif ($_SESSION['alert'] == 'delete_failed') {
-        echo "Swal.fire({
-        title: 'Gagal!',
-        text: 'Gagal menghapus produk!',
-        icon: 'error'
+        title: 'Tidak Ada Perubahan!',
+        text: 'Data yang Anda masukkan sama dengan yang sudah ada.',
+        icon: 'info'
     });";
     } elseif ($_SESSION['alert'] == 'update_failed') {
         echo "Swal.fire({
@@ -69,10 +64,14 @@ if (isset($_SESSION['alert'])) {
         icon: 'error'
     });";
     }
+
     echo "});</script>";
-    unset($_SESSION['alert']); // Hapus session alert setelah ditampilkan
+
+    // Hapus session alert agar tidak muncul lagi saat halaman di-refresh
+    unset($_SESSION['alert']);
 }
 ?>
+
 
 
 <div id="wrapper">

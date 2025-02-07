@@ -30,9 +30,27 @@ if (!$product) {
     header("Location: products.php?error=not_found");
     exit();
 }
-
-
 ?>
+
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+if (isset($_GET['error']) && $_GET['error'] == 'no_change') {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                title: 'Tidak Ada Perubahan!',
+                text: 'Data yang Anda masukkan sama dengan yang sudah ada.',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>
+
 
 
 <div id="wrapper">

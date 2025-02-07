@@ -11,98 +11,46 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 $database = new Database();
 $db = $database->getConnection();
+$categoryController = new CategoryController($db);
 
 $userModel = new UserModel($db);
 $user = $userModel->getUserById($_SESSION['user_id']);
 
-$categoryController = new CategoryController($db);
 $categories = $categoryController->getAllCategories();
 ?>
 
 <?php
-// Cek apakah session sudah dimulai
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Tampilkan alert berdasarkan session
+// SweetAlert untuk Notifikasi CRUD
 if (isset($_SESSION['alert'])) {
     echo "<script>
         document.addEventListener('DOMContentLoaded', function () {";
-
     if ($_SESSION['alert'] == 'added') {
-        echo "Swal.fire({
-            title: 'Good job!',
-            text: 'Product successfully added!',
-            icon: 'success'
-        });";
-    } elseif ($_SESSION['alert'] == 'deleted') {
-        echo "Swal.fire({
-            title: 'Deleted!',
-            text: 'Product successfully deleted!',
-            icon: 'success'
-        });";
+        echo "Swal.fire('Berhasil!', 'Kategori berhasil ditambahkan!', 'success');";
     } elseif ($_SESSION['alert'] == 'updated') {
-        echo "Swal.fire({
-            title: 'Updated!',
-            text: 'Product successfully updated!',
-            icon: 'success'
-        });";
-    } elseif ($_SESSION['alert'] == 'add_failed') {
-        echo "Swal.fire({
-            title: 'Failed!',
-            text: 'Failed to add product!',
-            icon: 'error'
-        });";
-    } elseif ($_SESSION['alert'] == 'delete_failed') {
-        echo "Swal.fire({
-            title: 'Failed!',
-            text: 'Failed to delete product!',
-            icon: 'error'
-        });";
-    } elseif ($_SESSION['alert'] == 'update_failed') {
-        echo "Swal.fire({
-            title: 'Failed!',
-            text: 'Failed to update product!',
-            icon: 'error'
-        });";
+        echo "Swal.fire('Berhasil!', 'Kategori berhasil diperbarui!', 'success');";
+    } elseif ($_SESSION['alert'] == 'deleted') {
+        echo "Swal.fire('Berhasil!', 'Kategori berhasil dihapus!', 'success');";
+    } elseif ($_SESSION['alert'] == 'failed') {
+        echo "Swal.fire('Gagal!', 'Terjadi kesalahan, coba lagi!', 'error');";
     }
-
     echo "});</script>";
-    unset($_SESSION['alert']); // Hapus session alert setelah ditampilkan
+    unset($_SESSION['alert']);
 }
 ?>
 
 <div id="wrapper">
     <?php include '../layouts/sidebar.php'; ?>
-
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
             <?php include '../layouts/header.php'; ?>
-
             <div class="container-fluid">
-                <?php if (isset($_SESSION['success'])): ?>
-                    <div class="alert alert-success">
-                        <?= htmlspecialchars($_SESSION['success']); ?>
-                    </div>
-                    <?php unset($_SESSION['success']); ?>
-                <?php endif; ?>
-
-                <?php if (isset($_SESSION['error'])): ?>
-                    <div class="alert alert-danger">
-                        <?= htmlspecialchars($_SESSION['error']); ?>
-                    </div>
-                    <?php unset($_SESSION['error']); ?>
-                <?php endif; ?>
-
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Kelola Kategori</h1>
-                    <a href="add_category.php" class="btn btn-primary">Add New Category</a>
+                    <a href="add_category.php" class="btn btn-primary">Tambah Kategori</a>
                 </div>
-
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">List Kategori</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Daftar Kategori</h6>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -116,19 +64,25 @@ if (isset($_SESSION['alert'])) {
                                 </thead>
                                 <tbody>
                                     <?php if (!empty($categories)): ?>
-                                        <?php foreach ($categories as $index => $category): ?>
+                                        <?php $no = 1; ?>
+                                        <?php foreach ($categories as $category): ?>
                                             <tr>
-                                                <td><?= $index + 1; ?></td>
+                                                <td><?= $no++; ?></td>
                                                 <td><?= htmlspecialchars($category['nama_kategori']); ?></td>
                                                 <td>
-                                                    <a href="edit_category.php?id=<?= $category['id_kategori']; ?>" class="btn btn-warning btn-sm">Edit</a>
-                                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete(<?= $category['id_kategori']; ?>)">Delete</button>
+                                                    <a href="edit_category.php?id=<?= $category['id_kategori']; ?>" class="btn btn-info btn-circle">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger btn-circle"
+                                                        onclick="confirmDelete(<?= $category['id_kategori']; ?>)">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="3" class="text-center">Kategori Tidak Tersedia.</td>
+                                            <td colspan="3" class="text-center">Tidak ada kategori yang tersedia.</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
@@ -141,3 +95,37 @@ if (isset($_SESSION['alert'])) {
         <?php include '../layouts/footer.php'; ?>
     </div>
 </div>
+
+<script>
+    function confirmDelete(categoryId) {
+        Swal.fire({
+            title: "Yakin ingin menghapus kategori ini?",
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`../../controllers/category_actions.php?action=delete&id=${categoryId}`, {
+                        method: 'GET'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire("Berhasil!", "Kategori telah dihapus.", "success")
+                                .then(() => {
+                                    location.reload();
+                                });
+                        } else {
+                            Swal.fire("Error!", data.message || "Terjadi kesalahan.", "error");
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire("Error!", "Terjadi kesalahan dalam komunikasi dengan server.", "error");
+                    });
+            }
+        });
+    }
+</script>

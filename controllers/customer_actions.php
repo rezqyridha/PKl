@@ -56,14 +56,13 @@ elseif ($action == 'edit') {
         exit();
     }
 
-    $nama_pelanggan = isset($_POST['nama_pelanggan']) ? $_POST['nama_pelanggan'] : '';
-    $kontak = isset($_POST['kontak']) ? $_POST['kontak'] : '';
-    $alamat = isset($_POST['alamat']) ? $_POST['alamat'] : '';
-    $kota = isset($_POST['kota']) ? $_POST['kota'] : '';
-    $provinsi = isset($_POST['provinsi']) ? $_POST['provinsi'] : '';
+    $nama_pelanggan = $_POST['nama_pelanggan'] ?? '';
+    $kontak = $_POST['kontak'] ?? '';
+    $alamat = $_POST['alamat'] ?? '';
+    $kota = $_POST['kota'] ?? '';
+    $provinsi = $_POST['provinsi'] ?? '';
 
-    // Validasi input
-    if (!empty($nama_pelanggan) && !empty($kontak) && !empty($alamat) && !empty($kota) && !empty($provinsi) && !empty($stock)) {
+    if (!empty($nama_pelanggan) && !empty($kontak) && !empty($alamat) && !empty($kota) && !empty($provinsi)) {
         $data = [
             'nama_pelanggan' => $nama_pelanggan,
             'kontak' => $kontak,
@@ -75,20 +74,20 @@ elseif ($action == 'edit') {
         $result = $customerController->editCustomer($customerId, $data);
 
         if ($result) {
-            $_SESSION['alert'] = 'updated'; // Set session untuk alert
-            header("Location: ../views/admin/customers.php");
-            exit();
+            $_SESSION['alert'] = 'updated';
         } else {
-            $_SESSION['alert'] = 'updated_failed';
-            header("Location: ../views/admin/customers.php");
-            exit();
+            $_SESSION['alert'] = 'no_change';
         }
+
+        header("Location: ../views/admin/customers.php");
+        exit();
     } else {
-        $_SESSION['alert'] = 'invalid_input';
+        $_SESSION['alert'] = 'update_failed';
         header("Location: ../views/admin/customers.php");
         exit();
     }
 }
+
 
 // Menangani aksi hapus pelanggan
 elseif ($action == 'delete') {

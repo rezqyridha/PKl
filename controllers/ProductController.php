@@ -85,8 +85,15 @@ class ProductController
 
     public function editProduct($id, $data)
     {
-        return $this->productModel->updateProduct($id, $data);
+        $result = $this->productModel->updateProduct($id, $data);
+
+        if ($result) {
+            return true; // Data berhasil diperbarui
+        } else {
+            return false; // Tidak ada perubahan atau update gagal
+        }
     }
+
 
     public function deleteProduct($id)
     {

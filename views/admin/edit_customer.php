@@ -11,11 +11,10 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 $database = new Database();
 $db = $database->getConnection();
+$customerController = new CustomerController($db);
 
 $userModel = new UserModel($db);
 $user = $userModel->getUserById($_SESSION['user_id']);
-
-$customerController = new CustomerController($db);
 
 $id = $_GET['id'] ?? null;
 if (!$id) {
@@ -28,7 +27,68 @@ if (!$customer) {
     header("Location: customers.php?error=not_found");
     exit();
 }
+
+// Load data provinsi
+$provinsi = [
+    "Aceh",
+    "Bali",
+    "Banten",
+    "Bengkulu",
+    "DI Yogyakarta",
+    "DKI Jakarta",
+    "Gorontalo",
+    "Jambi",
+    "Jawa Barat",
+    "Jawa Tengah",
+    "Jawa Timur",
+    "Kalimantan Barat",
+    "Kalimantan Selatan",
+    "Kalimantan Tengah",
+    "Kalimantan Timur",
+    "Kalimantan Utara",
+    "Kepulauan Bangka Belitung",
+    "Kepulauan Riau",
+    "Lampung",
+    "Maluku",
+    "Maluku Utara",
+    "Nusa Tenggara Barat",
+    "Nusa Tenggara Timur",
+    "Papua",
+    "Papua Barat",
+    "Riau",
+    "Sulawesi Barat",
+    "Sulawesi Selatan",
+    "Sulawesi Tengah",
+    "Sulawesi Tenggara",
+    "Sulawesi Utara",
+    "Sumatera Barat",
+    "Sumatera Selatan",
+    "Sumatera Utara"
+];
 ?>
+
+<?php
+// Pastikan session dimulai
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Tampilkan alert jika ada error
+if (isset($_GET['error']) && $_GET['error'] == 'no_change') {
+    echo "<script>
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                title: 'Tidak Ada Perubahan!',
+                text: 'Data yang Anda masukkan sama dengan yang sudah ada.',
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>";
+}
+?>
+
+
 
 <div id="wrapper">
     <?php include '../layouts/sidebar.php'; ?>
@@ -72,14 +132,16 @@ if (!$customer) {
                                 <label for="provinsi">Provinsi</label>
                                 <select class="form-control" id="provinsi" name="provinsi" required>
                                     <option value="">Pilih Provinsi</option>
-                                    <option value="DKI Jakarta" <?= $customer['provinsi'] == "DKI Jakarta" ? "selected" : "" ?>>DKI Jakarta</option>
-                                    <option value="Jawa Barat" <?= $customer['provinsi'] == "Jawa Barat" ? "selected" : "" ?>>Jawa Barat</option>
-                                    <option value="Jawa Timur" <?= $customer['provinsi'] == "Jawa Timur" ? "selected" : "" ?>>Jawa Timur</option>
-                                    <option value="Sumatera Utara" <?= $customer['provinsi'] == "Sumatera Utara" ? "selected" : "" ?>>Sumatera Utara</option>
-                                    <option value="Kalimantan Selatan" <?= $customer['provinsi'] == "Kalimantan Selatan" ? "selected" : "" ?>>Kalimantan Selatan</option>
+                                    <?php
+                                    // Loop through the $provinsi array and create an option for each province
+                                    foreach ($provinsi as $prov) {
+                                        $selected = ($customer['provinsi'] == $prov) ? "selected" : "";
+                                        echo "<option value=\"$prov\" $selected>$prov</option>";
+                                    }
+                                    ?>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </form>
                     </div>
                 </div>

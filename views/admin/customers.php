@@ -20,12 +20,12 @@ $user = $userModel->getUserById($_SESSION['user_id']);
 ?>
 
 <?php
-// Cek apakah session sudah dimulai
+// Pastikan session dimulai
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-// Tampilkan alert berdasarkan session
+// Cek dan tampilkan alert jika ada
 if (isset($_SESSION['alert'])) {
     echo "<script>
         document.addEventListener('DOMContentLoaded', function () {";
@@ -36,29 +36,23 @@ if (isset($_SESSION['alert'])) {
         text: 'Pelanggan berhasil ditambahkan!',
         icon: 'success'
     });";
+    } elseif ($_SESSION['alert'] == 'updated') {
+        echo "Swal.fire({
+        title: 'Berhasil!',
+        text: 'Pelanggan berhasil diperbarui!',
+        icon: 'success'
+    });";
     } elseif ($_SESSION['alert'] == 'deleted') {
         echo "Swal.fire({
         title: 'Terhapus!',
         text: 'Pelanggan berhasil dihapus!',
         icon: 'success'
     });";
-    } elseif ($_SESSION['alert'] == 'updated') {
+    } elseif ($_SESSION['alert'] == 'no_change') {
         echo "Swal.fire({
-        title: 'Berhasil!',
-        text: 'Pelanggan berhasil diubah!',
-        icon: 'success'
-    });";
-    } elseif ($_SESSION['alert'] == 'add_failed') {
-        echo "Swal.fire({
-        title: 'Gagal!',
-        text: 'Gagal menambahkan pelanggan!',
-        icon: 'error'
-    });";
-    } elseif ($_SESSION['alert'] == 'delete_failed') {
-        echo "Swal.fire({
-        title: 'Gagal!',
-        text: 'Gagal menghapus pelanggan!',
-        icon: 'error'
+        title: 'Tidak Ada Perubahan!',
+        text: 'Data yang Anda masukkan sama dengan yang sudah ada.',
+        icon: 'info'
     });";
     } elseif ($_SESSION['alert'] == 'update_failed') {
         echo "Swal.fire({
@@ -67,10 +61,14 @@ if (isset($_SESSION['alert'])) {
         icon: 'error'
     });";
     }
+
     echo "});</script>";
-    unset($_SESSION['alert']); // Hapus session alert setelah ditampilkan
+
+    // Hapus session alert agar tidak muncul lagi saat halaman di-refresh
+    unset($_SESSION['alert']);
 }
 ?>
+
 
 <div id="wrapper">
     <!-- Sidebar -->

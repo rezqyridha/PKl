@@ -47,18 +47,19 @@ $satuan = $productController->getAllSatuan();  // Ambil data satuan
                         <form action="../../controllers/product_actions.php?action=add" method="POST">
                             <div class="form-group">
                                 <label for="name">Nama</label>
-                                <input type="text" class="form-control" id="name" name="name" required>
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama produk" required>
                             </div>
+
                             <div class="form-group">
                                 <label for="description">Deskripsi</label>
-                                <textarea class="form-control" id="description" name="description" required></textarea>
+                                <textarea class="form-control" id="description" name="description" placeholder="Masukkan deskripsi produk" required></textarea>
                             </div>
 
                             <!-- Kategori Produk -->
                             <div class="form-group">
                                 <label for="category">Kategori</label>
                                 <select class="form-control" id="category" name="category" required>
-                                    <option value="">Pilih Kategori</option>
+                                    <option value="">-- Pilih Kategori --</option>
                                     <?php foreach ($categories as $category): ?>
                                         <option value="<?= htmlspecialchars($category['id_kategori']); ?>">
                                             <?= htmlspecialchars($category['nama_kategori']); ?>
@@ -71,20 +72,25 @@ $satuan = $productController->getAllSatuan();  // Ambil data satuan
                             <div class="form-group">
                                 <label for="satuan">Satuan Produk</label>
                                 <select class="form-control" id="satuan" name="satuan" required>
-                                    <option value="">Pilih Satuan</option>
+                                    <option value="">-- Pilih Satuan --</option>
                                     <?php foreach ($satuan as $satuanItem): ?>
-                                        <option value="<?= $satuanItem['id_satuan']; ?>"><?= htmlspecialchars($satuanItem['nama_satuan']); ?></option>
+                                        <option value="<?= $satuanItem['id_satuan']; ?>">
+                                            <?= htmlspecialchars($satuanItem['nama_satuan']); ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+
                             <div class="form-group">
                                 <label for="price">Harga</label>
-                                <input type="number" class="form-control" id="price" name="price" required>
+                                <input type="number" class="form-control" id="price" name="price" placeholder="Masukkan harga produk (Rp)" required>
                             </div>
+
                             <div class="form-group">
                                 <label for="stock">Stok</label>
-                                <input type="number" class="form-control" id="stock" name="stock" required>
+                                <input type="number" class="form-control" id="stock" name="stock" placeholder="Masukkan jumlah stok tersedia" required>
                             </div>
+
                             <button type="submit" class="btn btn-primary">Tambahkan Produk</button>
                         </form>
                     </div>
