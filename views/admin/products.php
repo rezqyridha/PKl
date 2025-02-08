@@ -192,9 +192,9 @@ if (isset($_SESSION['alert'])) {
 
 <!-- Script Delete -->
 <script>
-    function confirmDelete(productId) {
+    function confirmDelete(restockId) {
         Swal.fire({
-            title: "Yakin ingin menghapus produk ini?",
+            title: "Yakin ingin menghapus data restock ini?",
             text: "Data yang dihapus tidak dapat dikembalikan!",
             icon: "warning",
             showCancelButton: true,
@@ -203,16 +203,15 @@ if (isset($_SESSION['alert'])) {
             confirmButtonText: "Hapus!"
         }).then((result) => {
             if (result.isConfirmed) {
-                // Kirim request ke product_actions.php (bukan file terpisah)
-                fetch(`../../controllers/product_actions.php?action=delete&id=${productId}`, {
+                fetch(`../../controllers/restock_actions.php?action=delete&id=${restockId}`, {
                         method: 'GET'
                     })
-                    .then(response => response.json()) // Pastikan PHP mengembalikan JSON
+                    .then(response => response.json()) // Pastikan server mengembalikan JSON
                     .then(data => {
                         if (data.success) {
                             Swal.fire({
                                 title: "Berhasil!",
-                                text: "Produk telah dihapus.",
+                                text: data.message || "Data restock telah dihapus.",
                                 icon: "success"
                             }).then(() => {
                                 location.reload(); // Reload halaman setelah berhasil
@@ -220,7 +219,7 @@ if (isset($_SESSION['alert'])) {
                         } else {
                             Swal.fire({
                                 title: "Error!",
-                                text: data.message || "Terjadi kesalahan saat menghapus produk.",
+                                text: data.message || "Terjadi kesalahan saat menghapus data restock.",
                                 icon: "error"
                             });
                         }
