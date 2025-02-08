@@ -110,24 +110,23 @@ if (isset($_SESSION['alert'])) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($sales as $key => $sale): ?>
+                                    <?php if (!empty($sales)): ?>
+                                        <?php foreach ($sales as $key => $sale): ?>
+                                            <tr>
+                                                <td><?= $key + 1; ?></td>
+                                                <td><?= htmlspecialchars($sale['nama_produk']); ?></td>
+                                                <td><?= htmlspecialchars($sale['nama_pelanggan']); ?></td>
+                                                <td><?= htmlspecialchars($sale['tanggal_penjualan']); ?></td>
+                                                <td><?= htmlspecialchars($sale['jumlah_terjual']); ?> unit</td>
+                                                <td><?= number_format($sale['total_harga'], 0, ',', '.'); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
                                         <tr>
-                                            <td><?= $key + 1; ?></td>
-                                            <td><?= htmlspecialchars($sale['nama_produk']); ?></td>
-                                            <td><?= htmlspecialchars($sale['nama_pelanggan']); ?></td>
-                                            <td><?= htmlspecialchars($sale['tanggal_penjualan']); ?></td>
-                                            <td><?= htmlspecialchars($sale['jumlah_terjual']); ?> unit</td> <!-- Menambahkan satuan unit -->
-                                            <td>Rp <?= number_format($sale['total_harga'],); ?></td>
-                                            <td>
-                                                <a href="edit_sale.php?id=<?= $sale['id_penjualan']; ?>" class="btn btn-info btn-circle">
-                                                    <i class="fas fa-info-circle"></i>
-                                                </a>
-                                                <button class="btn btn-danger btn-circle" onclick="confirmDelete(<?= $sale['id_penjualan']; ?>)">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </td>
+                                            <td colspan="7" class="text-center text-muted">Tidak ada data penjualan.</td>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    <?php endif; ?>
+
                                 </tbody>
                             </table>
                         </div>

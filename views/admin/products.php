@@ -168,7 +168,7 @@ if (isset($_SESSION['alert'])) {
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="7" class="text-center">Tidak ada produk yang tersedia.</td>
+                                            <td colspan="8" class="text-center">Tidak ada produk yang tersedia.</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
