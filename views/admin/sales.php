@@ -11,67 +11,56 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
 
 $database = new Database();
 $db = $database->getConnection();
+
 $userModel = new UserModel($db);
 $user = $userModel->getUserById($_SESSION['user_id']);
 
 $salesController = new SalesController($db);
-
-// Mendapatkan semua penjualan
 $sales = $salesController->showAllSales();
 
-// Tampilkan alert berdasarkan session
+// Menampilkan SweetAlert berdasarkan session alert
 if (isset($_SESSION['alert'])) {
     echo "<script>
         document.addEventListener('DOMContentLoaded', function () {";
 
-    // Menampilkan alert sukses
-    if ($_SESSION['alert'] == 'added') {
-        echo "Swal.fire({
-            title: 'Berhasil!',
-            text: 'Penjualan berhasil ditambahkan!',
-            icon: 'success'
-        });";
-    } elseif ($_SESSION['alert'] == 'updated') {
-        echo "Swal.fire({
-            title: 'Berhasil!',
-            text: 'Penjualan berhasil diubah!',
-            icon: 'success'
-        });";
-    } elseif ($_SESSION['alert'] == 'deleted') {
-        echo "Swal.fire({
-            title: 'Terhapus!',
-            text: 'Penjualan berhasil dihapus!',
-            icon: 'success'
-        });";
-    }
-
-    // Menampilkan alert gagal
-    elseif ($_SESSION['alert'] == 'add_failed') {
-        echo "Swal.fire({
-            title: 'Gagal!',
-            text: 'Gagal menambahkan penjualan!',
-            icon: 'error'
-        });";
-    } elseif ($_SESSION['alert'] == 'update_failed') {
-        echo "Swal.fire({
-            title: 'Gagal!',
-            text: 'Gagal mengubah penjualan!',
-            icon: 'error'
-        });";
-    } elseif ($_SESSION['alert'] == 'delete_failed') {
-        echo "Swal.fire({
-            title: 'Gagal!',
-            text: 'Gagal menghapus penjualan!',
-            icon: 'error'
-        });";
+    switch ($_SESSION['alert']) {
+        case 'added':
+            echo "Swal.fire({ title: 'Berhasil!', text: 'Penjualan berhasil ditambahkan!', icon: 'success' });";
+            break;
+        case 'updated':
+            echo "Swal.fire({ title: 'Berhasil!', text: 'Penjualan berhasil diubah!', icon: 'success' });";
+            break;
+        case 'deleted':
+            echo "Swal.fire({ title: 'Terhapus!', text: 'Penjualan berhasil dihapus!', icon: 'success' });";
+            break;
+        case 'no_change':
+            echo "Swal.fire({ title: 'Tidak Ada Perubahan!', text: 'Data yang Anda masukkan sama dengan yang sudah ada.',
+                icon: 'info' });";
+            break;
+        case 'add_failed':
+            echo "Swal.fire({ title: 'Gagal!', text: 'Gagal menambahkan penjualan!', icon: 'error' });";
+            break;
+        case 'update_failed':
+            echo "Swal.fire({ title: 'Gagal!', text: 'Gagal memperbarui penjualan!', icon: 'error' });";
+            break;
+        case 'delete_failed':
+            echo "Swal.fire({ title: 'Gagal!', text: 'Gagal menghapus penjualan!', icon: 'error' });";
+            break;
+        case 'validation_error':
+            echo "Swal.fire({ title: 'Gagal!', text: 'Data penjualan tidak valid!', icon: 'error' });";
+            break;
+        default:
+            echo "Swal.fire({ title: 'Peringatan!', text: 'Aksi tidak valid!', icon: 'warning' });";
+            break;
     }
 
     echo "});</script>";
 
-    // Menghapus session alert setelah ditampilkan
-    unset($_SESSION['alert']);
+    unset($_SESSION['alert']); // Hapus session alert setelah ditampilkan
 }
+
 ?>
+
 
 <div id="wrapper">
     <!-- Sidebar -->
@@ -85,9 +74,10 @@ if (isset($_SESSION['alert'])) {
             <?php include '../layouts/header.php'; ?>
 
             <div class="container-fluid">
+                <!-- Page Heading -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 text-gray-800">Daftar Penjualan</h1>
-                    <a href="add_sale.php" class="btn btn-primary">Tambah Penjualan Baru</a>
+                    <h1 class="h3 text-gray-800">Kelola Penjualan</h1>
+                    <a href="add_sales.php" class="btn btn-primary">Tambah Penjualan Baru</a>
                 </div>
 
                 <!-- Sales Table -->
@@ -105,28 +95,42 @@ if (isset($_SESSION['alert'])) {
                                         <th>Pelanggan</th>
                                         <th>Tanggal Penjualan</th>
                                         <th>Jumlah Terjual</th>
-                                        <th>Total Harga</th>
+                                        <th>Total Harga (Rp)</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (!empty($sales)): ?>
-                                        <?php foreach ($sales as $key => $sale): ?>
+                                        <?php $no = 1; ?>
+                                        <?php foreach ($sales as $sale): ?>
                                             <tr>
-                                                <td><?= $key + 1; ?></td>
+                                                <td><?= $no++; ?></td>
                                                 <td><?= htmlspecialchars($sale['nama_produk']); ?></td>
                                                 <td><?= htmlspecialchars($sale['nama_pelanggan']); ?></td>
-                                                <td><?= htmlspecialchars($sale['tanggal_penjualan']); ?></td>
-                                                <td><?= htmlspecialchars($sale['jumlah_terjual']); ?> unit</td>
-                                                <td><?= number_format($sale['total_harga'], 0, ',', '.'); ?></td>
+                                                <td><?php
+                                                    $tanggal = DateTime::createFromFormat('Y-m-d', $sale['tanggal_penjualan']);
+                                                    echo $tanggal ? $tanggal->format('d-m-Y') : '-';
+                                                    ?>
+                                                </td>
+                                                <td><?= htmlspecialchars($sale['jumlah_terjual'] ?? '0'); ?> unit</td>
+                                                <td>Rp <?= number_format((float) ($sale['total_harga'] ?? 0), 0, ',', '.'); ?></td>
+                                                <td>
+                                                    <a href="edit_sales.php?id=<?= $sale['id_penjualan']; ?>"
+                                                        class="btn btn-info btn-circle">
+                                                        <i class="fas fa-info-circle"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger btn-circle"
+                                                        onclick="confirmDelete(<?= $sale['id_penjualan']; ?>)">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="7" class="text-center text-muted">Tidak ada data penjualan.</td>
+                                            <td colspan="7" class="text-center">Tidak ada penjualan yang tersedia.</td>
                                         </tr>
                                     <?php endif; ?>
-
                                 </tbody>
                             </table>
                         </div>
@@ -134,7 +138,56 @@ if (isset($_SESSION['alert'])) {
                 </div>
             </div>
         </div>
+        <!-- End Main Content -->
+
         <!-- Footer -->
         <?php include '../layouts/footer.php'; ?>
     </div>
+    <!-- End Content Wrapper -->
 </div>
+
+<!-- Script Delete -->
+<script>
+    function confirmDelete(saleId) {
+        Swal.fire({
+            title: "Yakin ingin menghapus penjualan ini?",
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Hapus!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`../../controllers/sales_actions.php?action=delete&id=${saleId}`, {
+                        method: 'GET'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire({
+                                title: "Berhasil!",
+                                text: "Penjualan telah dihapus.",
+                                icon: "success"
+                            }).then(() => {
+                                location.reload(); // Reload halaman
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Error!",
+                                text: data.message || "Terjadi kesalahan saat menghapus penjualan.",
+                                icon: "error"
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Terjadi kesalahan dalam komunikasi dengan server.",
+                            icon: "error"
+                        });
+                    });
+            }
+        });
+    }
+</script>

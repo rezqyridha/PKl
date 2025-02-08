@@ -9,18 +9,30 @@ class SalesModel
         $this->db = $db;
     }
 
+    // Helper untuk binding parameter
+    private function bindParams($stmt, $params)
+    {
+        foreach ($params as $key => &$value) {
+            $stmt->bindParam($key, $value);
+        }
+    }
+
     // Menambahkan penjualan
     public function addSale($data)
     {
         $query = "INSERT INTO {$this->table} (id_produk, id_pelanggan, tanggal_penjualan, jumlah_terjual, total_harga)
                   VALUES (:id_produk, :id_pelanggan, :tanggal_penjualan, :jumlah_terjual, :total_harga)";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id_produk', $data['id_produk']);
-        $stmt->bindParam(':id_pelanggan', $data['id_pelanggan']);
-        $stmt->bindParam(':tanggal_penjualan', $data['tanggal_penjualan']);
-        $stmt->bindParam(':jumlah_terjual', $data['jumlah_terjual']);
-        $stmt->bindParam(':total_harga', $data['total_harga']);
 
+        $params = [
+            ':id_produk' => $data['id_produk'],
+            ':id_pelanggan' => $data['id_pelanggan'],
+            ':tanggal_penjualan' => $data['tanggal_penjualan'],
+            ':jumlah_terjual' => $data['jumlah_terjual'],
+            ':total_harga' => $data['total_harga']
+        ];
+
+        $this->bindParams($stmt, $params);
         return $stmt->execute();
     }
 
@@ -28,7 +40,7 @@ class SalesModel
     public function getAllSales()
     {
         $query = "SELECT penjualan.id_penjualan, produk.nama_produk, pelanggan.nama_pelanggan, 
-                  penjualan.tanggal_penjualan, penjualan.jumlah_terjual, penjualan.total_harga
+                         penjualan.tanggal_penjualan, penjualan.jumlah_terjual, penjualan.total_harga
                   FROM {$this->table} 
                   JOIN produk ON penjualan.id_produk = produk.id_produk
                   JOIN pelanggan ON penjualan.id_pelanggan = pelanggan.id_pelanggan";
@@ -37,42 +49,52 @@ class SalesModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
     // Mengambil penjualan berdasarkan ID
     public function getSaleById($id)
     {
         $query = "SELECT * FROM {$this->table} WHERE id_penjualan = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Mengambil penjualan berdasarkan rentang tanggal
     public function getSalesByDate($startDate, $endDate)
     {
-        $query = "SELECT * FROM {$this->table} 
-                  WHERE tanggal_penjualan BETWEEN :start_date AND :end_date";
+        $query = "SELECT * FROM {$this->table} WHERE tanggal_penjualan BETWEEN :start_date AND :end_date";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':start_date', $startDate);
-        $stmt->bindParam(':end_date', $endDate);
+
+        $params = [
+            ':start_date' => $startDate,
+            ':end_date' => $endDate
+        ];
+
+        $this->bindParams($stmt, $params);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Mengedit penjualan
+    // Memperbarui penjualan
     public function updateSale($id, $data)
     {
-        $query = "UPDATE {$this->table} SET id_produk = :id_produk, id_pelanggan = :id_pelanggan, 
-                    tanggal_penjualan = :tanggal_penjualan, jumlah_terjual = :jumlah_terjual, total_harga = :total_harga 
-                    WHERE id_penjualan = :id";
+        $query = "UPDATE {$this->table} 
+                  SET id_produk = :id_produk, id_pelanggan = :id_pelanggan, 
+                      tanggal_penjualan = :tanggal_penjualan, jumlah_terjual = :jumlah_terjual, 
+                      total_harga = :total_harga 
+                  WHERE id_penjualan = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':id_produk', $data['id_produk']);
-        $stmt->bindParam(':id_pelanggan', $data['id_pelanggan']);
-        $stmt->bindParam(':tanggal_penjualan', $data['tanggal_penjualan']);
-        $stmt->bindParam(':jumlah_terjual', $data['jumlah_terjual']);
-        $stmt->bindParam(':total_harga', $data['total_harga']);
 
+        $params = [
+            ':id' => $id,
+            ':id_produk' => $data['id_produk'],
+            ':id_pelanggan' => $data['id_pelanggan'],
+            ':tanggal_penjualan' => $data['tanggal_penjualan'],
+            ':jumlah_terjual' => $data['jumlah_terjual'],
+            ':total_harga' => $data['total_harga']
+        ];
+
+        $this->bindParams($stmt, $params);
         return $stmt->execute();
     }
 
@@ -81,7 +103,7 @@ class SalesModel
     {
         $query = "DELETE FROM {$this->table} WHERE id_penjualan = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 }

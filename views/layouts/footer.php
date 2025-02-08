@@ -6,6 +6,9 @@
     </div>
 </footer>
 
+<!-- Tambahkan SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- jQuery -->
 <script src="../../assets/vendor/jquery/jquery.min.js"></script>
 

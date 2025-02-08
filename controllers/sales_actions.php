@@ -1,62 +1,112 @@
 <?php
-require_once '../../config/database.php';
-require_once '../../controllers/SalesController.php';
+require_once '../config/database.php';
+require_once 'SalesController.php';
 
-session_start();
+session_start(); // Pastikan session dimulai
+
+$action = $_GET['action'] ?? '';
 
 $database = new Database();
 $db = $database->getConnection();
 $salesController = new SalesController($db);
 
-$action = isset($_GET['action']) ? $_GET['action'] : '';
-
+// Menangani aksi tambah penjualan
 if ($action == 'add') {
-    $data = [
-        'id_produk' => $_POST['id_produk'],
-        'id_pelanggan' => $_POST['id_pelanggan'],
-        'tanggal_penjualan' => $_POST['tanggal_penjualan'],
-        'jumlah_terjual' => $_POST['jumlah_terjual'],
-        'total_harga' => $_POST['total_harga'],
-    ];
+    $data = sanitizeInput($_POST);
 
-    $result = $salesController->addSale($data);
+    if (validateSaleData($data)) {
+        $result = $salesController->addSale($data);
 
-    if ($result) {
-        $_SESSION['alert'] = 'added';
+        $_SESSION['alert'] = $result ? 'added' : 'add_failed';
         header("Location: ../views/admin/sales.php");
+        exit();
     } else {
-        $_SESSION['alert'] = 'add_failed';
+        $_SESSION['alert'] = 'validation_error';
         header("Location: ../views/admin/sales.php");
+        exit();
     }
-} elseif ($action == 'edit') {
-    $id = $_GET['id'] ?? null;
-    $data = [
-        'id_produk' => $_POST['id_produk'],
-        'id_pelanggan' => $_POST['id_pelanggan'],
-        'tanggal_penjualan' => $_POST['tanggal_penjualan'],
-        'jumlah_terjual' => $_POST['jumlah_terjual'],
-        'total_harga' => $_POST['total_harga'],
-    ];
+}
 
-    $result = $salesController->updateSale($id, $data);
+// Menangani aksi edit penjualan
+elseif ($action == 'edit') {
+    $id = intval($_GET['id'] ?? 0);
 
-    if ($result) {
-        $_SESSION['alert'] = 'updated';
+    if ($id == 0) {
+        $_SESSION['alert'] = 'invalid_id';
         header("Location: ../views/admin/sales.php");
+        exit();
+    }
+
+    $data = sanitizeInput($_POST);
+
+    if (validateSaleData($data)) {
+        $result = $salesController->updateSales($id, $data);
+
+        $_SESSION['alert'] = ($result === 'success') ? 'updated' : (($result === 'no_change') ? 'no_change' : 'update_failed');
+        header("Location: ../views/admin/sales.php");
+        exit();
     } else {
-        $_SESSION['alert'] = 'update_failed';
+        $_SESSION['alert'] = 'validation_error';
         header("Location: ../views/admin/sales.php");
+        exit();
     }
-} elseif ($action == 'delete') {
-    $id = $_GET['id'] ?? null;
+}
+
+// Menangani aksi hapus penjualan
+elseif ($action == 'delete') {
+    $id = intval($_GET['id'] ?? 0);
+
+    if ($id == 0) {
+        echo json_encode(["success" => false, "message" => "ID penjualan tidak valid."]);
+        exit();
+    }
 
     $result = $salesController->deleteSale($id);
 
     if ($result) {
-        $_SESSION['alert'] = 'deleted';
+        echo json_encode(["success" => true, "message" => "Penjualan berhasil dihapus."]);
     } else {
-        $_SESSION['alert'] = 'delete_failed';
+        echo json_encode(["success" => false, "message" => "Gagal menghapus penjualan."]);
+    }
+    exit();
+}
+
+// Jika aksi tidak valid
+else {
+    $_SESSION['alert'] = 'invalid_action';
+    header("Location: ../views/admin/sales.php");
+    exit();
+}
+
+// ==============================
+// Fungsi Helper
+// ==============================
+
+function validateSaleData($data)
+{
+    if (
+        empty($data['id_produk']) || empty($data['id_pelanggan']) || empty($data['tanggal_penjualan']) ||
+        empty($data['jumlah_terjual']) || empty($data['total_harga'])
+    ) {
+        return false;
     }
 
-    header("Location: ../views/admin/sales.php");
+    if (!is_numeric($data['jumlah_terjual']) || $data['jumlah_terjual'] <= 0) {
+        return false;
+    }
+
+    if (!is_numeric($data['total_harga']) || $data['total_harga'] <= 0) {
+        return false;
+    }
+
+    return true;
+}
+
+function sanitizeInput($data)
+{
+    $sanitizedData = [];
+    foreach ($data as $key => $value) {
+        $sanitizedData[$key] = htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
+    }
+    return $sanitizedData;
 }
