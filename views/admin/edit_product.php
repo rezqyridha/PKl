@@ -106,8 +106,11 @@ if (isset($_GET['error']) && $_GET['error'] == 'no_change') {
                                 <input type="number" class="form-control" id="price" name="price" value="<?= htmlspecialchars($product['harga']); ?>" required>
                             </div>
                             <div class="form-group">
-                                <label for="stock">Stock</label>
-                                <input type="number" class="form-control" id="stock" name="stock" value="<?= htmlspecialchars($product['stok']); ?>" required>
+                                <label for="stok">Stok (Opsional)</label>
+                                <input type="number" class="form-control" id="stok" name="stok"
+                                    placeholder="Masukkan stok (boleh dikosongkan)"
+                                    value="<?= isset($product['stok']) ? htmlspecialchars($product['stok']) : ''; ?>"
+                                    <?= (isset($product['stok']) && $product['stok'] !== null && $product['stok'] > 0) ? 'readonly' : ''; ?>>
                             </div>
                             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                         </form>

@@ -1,14 +1,15 @@
 <?php
 require_once __DIR__ . '../../config/database.php';
 require_once __DIR__ . '../../controllers/RestockController.php';
-require_once __DIR__ . '../../controllers/ProductController.php'; // Tambahkan ProductController
+require_once __DIR__ . '../../controllers/ProductController.php';
+
 session_start();
 
 $action = $_GET['action'] ?? '';
 $database = new Database();
 $db = $database->getConnection();
 $restockController = new RestockController($db);
-$productController = new ProductController($db); // Inisialisasi ProductController
+$productController = new ProductController($db);
 
 try {
     switch ($action) {
@@ -21,7 +22,7 @@ try {
             break;
 
         case 'delete':
-            handleDeleteRestock($restockController);
+            handleDeleteRestock($restockController, $productController); // Perbarui fungsi delete
             break;
 
         default:
@@ -56,6 +57,8 @@ function handleAddRestock($restockController, $productController)
                 $newStock = $product['stok'] + $data['jumlah_ditambahkan'];
                 $productController->updateStock($data['id_produk'], $newStock);
                 error_log("Stok produk ID {$data['id_produk']} diperbarui menjadi: $newStock");
+            } else {
+                error_log("Produk dengan ID {$data['id_produk']} tidak ditemukan.");
             }
 
             $_SESSION['alert'] = 'restock_success';
@@ -68,6 +71,7 @@ function handleAddRestock($restockController, $productController)
 
     redirectToRestock();
 }
+
 
 function handleEditRestock($restockController)
 {
@@ -89,7 +93,7 @@ function handleEditRestock($restockController)
     redirectToRestock();
 }
 
-function handleDeleteRestock($restockController)
+function handleDeleteRestock($restockController, $productController)
 {
     $id = intval($_GET['id'] ?? 0);
     if ($id === 0) {
@@ -97,8 +101,27 @@ function handleDeleteRestock($restockController)
         redirectToRestock();
     }
 
-    $result = $restockController->deleteRestock($id);
-    $_SESSION['alert'] = $result ? 'deleted' : 'delete_failed';
+    // Ambil data restock sebelum dihapus
+    $restock = $restockController->getRestockById($id);
+    if ($restock) {
+        $productId = $restock['id_produk'];
+        $quantityAdded = $restock['jumlah_ditambahkan'];
+
+        // Kurangi kembali stok produk
+        $product = $productController->getProductById($productId);
+        if ($product) {
+            $newStock = $product['stok'] - $quantityAdded;
+            $newStock = max($newStock, 0); // Pastikan stok tidak negatif
+            $productController->updateStock($productId, $newStock);
+            error_log("Stok produk ID $productId dikembalikan menjadi: $newStock");
+        }
+
+        // Hapus data restock
+        $result = $restockController->deleteRestock($id);
+        $_SESSION['alert'] = $result ? 'deleted' : 'delete_failed';
+    } else {
+        $_SESSION['alert'] = 'not_found';
+    }
 
     redirectToRestock();
 }
@@ -121,11 +144,13 @@ function sanitizeRestockInput($data)
 function validateRestockData($data)
 {
     return !empty($data['id_produk']) &&
+        !empty($data['id_satuan']) && // Tambahkan validasi untuk id_satuan
         !empty($data['id_supplier']) &&
         !empty($data['tanggal_restock']) &&
         is_numeric($data['jumlah_ditambahkan']) && $data['jumlah_ditambahkan'] > 0 &&
         is_numeric($data['harga_per_unit']) && $data['harga_per_unit'] > 0;
 }
+
 
 function redirectToRestock()
 {

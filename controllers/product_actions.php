@@ -17,29 +17,33 @@ if ($action == 'add') {
     $category = $_POST['category'] ?? '';
     $satuan = $_POST['satuan'] ?? '';
     $price = $_POST['price'] ?? '';
-    $stock = $_POST['stock'] ?? '';
+    $stock = $_POST['stock'] ?? null;  // Stok bisa bernilai null jika kosong
 
-    if (!empty($name) && !empty($description) && !empty($category) && !empty($satuan) && !empty($price) && !empty($stock)) {
+    // Validasi input wajib diisi
+    if (!empty($name) && !empty($description) && !empty($category) && !empty($satuan) && !empty($price)) {
+        // Jika stok kosong, set sebagai null agar sesuai dengan perubahan di model
+        $stock = ($stock === '' || is_null($stock)) ? null : (int)$stock;
+
         $data = [
             'name' => $name,
             'description' => $description,
             'category' => $category,
             'satuan' => $satuan,
             'price' => $price,
-            'stock' => $stock,
+            'stock' => $stock,  // Stok bisa null atau angka
         ];
 
         $result = $productController->addProduct($data);
 
         $_SESSION['alert'] = $result ? 'added' : 'add_failed';
-        header("Location: ../views/admin/products.php");
-        exit();
     } else {
-        $_SESSION['alert'] = 'invalid_input';
-        header("Location: ../views/admin/products.php");
-        exit();
+        $_SESSION['alert'] = 'invalid_input';  // Alert jika input tidak lengkap
     }
+
+    header("Location: ../views/admin/products.php");
+    exit();
 }
+
 
 // Menangani aksi edit produk
 elseif ($action == 'edit') {

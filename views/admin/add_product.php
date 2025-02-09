@@ -89,8 +89,8 @@ $satuan = $productController->getAllSatuan();  // Ambil data satuan
                             </div>
 
                             <div class="form-group">
-                                <label for="stock">Stok</label>
-                                <input type="number" class="form-control" id="stock" name="stock" placeholder="Masukkan jumlah stok tersedia" required>
+                                <label for="stok">Stok (Opsional)</label>
+                                <input type="number" class="form-control" id="stok" name="stok" placeholder="Masukkan stok (boleh dikosongkan)">
                             </div>
 
                             <button type="submit" class="btn btn-primary">Simpan Produk</button>

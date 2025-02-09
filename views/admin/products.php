@@ -63,6 +63,12 @@ if (isset($_SESSION['alert'])) {
         text: 'Gagal mengubah produk!',
         icon: 'error'
     });";
+    } elseif ($_SESSION['alert'] == 'invalid_input') {
+        echo "Swal.fire({
+        title: 'Gagal!',
+        text: 'Data yang anda masukkan tidak lengkap !',
+        icon: 'error'
+    });";
     }
 
     echo "});</script>";
@@ -156,7 +162,7 @@ if (isset($_SESSION['alert'])) {
 
                                                 <!-- Menampilkan harga produk -->
                                                 <td>Rp <?= number_format($product['harga']); ?></td>
-                                                <td><?= htmlspecialchars($product['stok']); ?></td>
+                                                <td><?= ($product['stok'] === null || $product['stok'] === 0) ? '0' : htmlspecialchars($product['stok']); ?></td>
                                                 <td>
                                                     <a href="edit_product.php?id=<?= $product['id_produk']; ?>"
                                                         class="btn btn-info btn-circle">
@@ -195,9 +201,9 @@ if (isset($_SESSION['alert'])) {
 
 <!-- Script Delete -->
 <script>
-    function confirmDelete(restockId) {
+    function confirmDelete(productId) {
         Swal.fire({
-            title: "Yakin ingin menghapus data restock ini?",
+            title: "Yakin ingin menghapus data produk ini?",
             text: "Data yang dihapus tidak dapat dikembalikan!",
             icon: "warning",
             showCancelButton: true,
@@ -206,7 +212,7 @@ if (isset($_SESSION['alert'])) {
             confirmButtonText: "Hapus!"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`../../controllers/restock_actions.php?action=delete&id=${restockId}`, {
+                fetch(`../../controllers/product_actions.php?action=delete&id=${productId}`, {
                         method: 'GET'
                     })
                     .then(response => response.json()) // Pastikan server mengembalikan JSON

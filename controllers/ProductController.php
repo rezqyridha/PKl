@@ -36,6 +36,9 @@ class ProductController
     public function getProductById($id)
     {
         try {
+            if (!is_numeric($id) || $id <= 0) {
+                throw new Exception("ID produk tidak valid.");
+            }
             return $this->productModel->getProductById($id);
         } catch (Exception $e) {
             error_log("Kesalahan saat mengambil produk ID $id: " . $e->getMessage());
@@ -46,41 +49,32 @@ class ProductController
     /**
      * Memperbarui stok produk
      * @param int $productId
-     * @param int $newStock
+     * @param int|null $newStock Stok baru, bisa null jika tidak ingin diubah
      * @return bool True jika berhasil, False jika gagal
      */
-    public function updateStock($productId, $newStock)
+    public function updateStock($productId, $newStock = null)
     {
         try {
+            if (!is_numeric($productId) || $productId <= 0) {
+                throw new Exception("ID produk tidak valid.");
+            }
+
+            // Jika stok kosong, set sebagai NULL
+            $newStock = ($newStock === '' || is_null($newStock)) ? null : (int)$newStock;
+
             $result = $this->productModel->updateStock($productId, $newStock);
+
             if ($result) {
-                error_log("Stok produk ID $productId berhasil diperbarui menjadi $newStock.");
+                error_log("Stok produk ID $productId berhasil diperbarui.");
             } else {
                 error_log("Gagal memperbarui stok produk ID $productId.");
             }
+
             return $result;
         } catch (Exception $e) {
             error_log("Exception saat memperbarui stok produk ID $productId: " . $e->getMessage());
             return false;
         }
-    }
-
-    /**
-     * Mengambil semua kategori produk
-     * @return array Daftar kategori produk
-     */
-    public function getAllCategories()
-    {
-        return $this->productModel->getAllCategories();
-    }
-
-    /**
-     * Mengambil semua satuan produk
-     * @return array Daftar satuan produk
-     */
-    public function getAllSatuan()
-    {
-        return $this->productModel->getAllSatuan();
     }
 
     /**
@@ -90,6 +84,9 @@ class ProductController
      */
     public function addProduct($data)
     {
+        // Validasi stok sebelum diteruskan ke model
+        $data['stock'] = ($data['stock'] === '' || is_null($data['stock'])) ? null : (int)$data['stock'];
+
         return $this->productModel->addProduct($data);
     }
 
@@ -101,6 +98,9 @@ class ProductController
      */
     public function editProduct($id, $data)
     {
+        // Validasi stok sebelum diteruskan ke model
+        $data['stock'] = ($data['stock'] === '' || is_null($data['stock'])) ? null : (int)$data['stock'];
+
         $result = $this->productModel->updateProduct($id, $data);
 
         if ($result) {
@@ -142,5 +142,23 @@ class ProductController
             error_log("Kesalahan saat menghapus produk ID $id: " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Mengambil semua kategori produk
+     * @return array Daftar kategori produk
+     */
+    public function getAllCategories()
+    {
+        return $this->productModel->getAllCategories();
+    }
+
+    /**
+     * Mengambil semua satuan produk
+     * @return array Daftar satuan produk
+     */
+    public function getAllSatuan()
+    {
+        return $this->productModel->getAllSatuan();
     }
 }

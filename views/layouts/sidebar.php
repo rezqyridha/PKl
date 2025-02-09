@@ -108,21 +108,22 @@ echo "<!-- Current Page: $page -->"; // Debugging
                 <a class="collapse-item" href="../admin/reports/sales_by_product.php">
                     <i class="fas fa-chart-bar"></i> Penjualan per Produk
                 </a>
-                <a class="collapse-item" href="../admin/reports/restock_expense.php">
+                <a class="collapse-item" href="../admin/reports/restock_expenses.php">
                     <i class="fas fa-file-invoice-dollar"></i> Pengeluaran Restock
                 </a>
-                <a class="collapse-item" href="../admin/reports/stock_report.php">
-                    <i class="fas fa-boxes"></i> Stok Produk
+                <a class="collapse-item" href="../admin/reports/product_stock_report.php">
+                    <i class="fas fa-boxes"></i> Stok Produk Saat Ini
                 </a>
-                <a class="collapse-item" href="../admin/reports/best_selling_products.php">
-                    <i class="fas fa-star"></i> Produk Terlaris
+                <a class="collapse-item" href="../admin/reports/sales_by_region.php">
+                    <i class="fas fa-map-marker-alt"></i> Penjualan per Wilayah
                 </a>
                 <a class="collapse-item" href="../admin/reports/profitability.php">
-                    <i class="fas fa-money-bill-wave"></i> Profitabilitas
+                    <i class="fas fa-money-bill-wave"></i> Laporan Profitabilitas
                 </a>
             </div>
         </div>
     </li>
+
 
 
     <!-- Divider -->

@@ -1,7 +1,7 @@
 <?php
 require_once '../../config/database.php';
-require_once '../../controllers/RestockController.php';
 require_once '../../models/UserModel.php';
+require_once '../../controllers/RestockController.php';
 
 session_start();
 if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'admin') {
@@ -26,7 +26,7 @@ if (isset($_SESSION['alert'])) {
 
     $alertMessages = [
         'restock_success' => ['title' => 'Berhasil!', 'text' => 'Restock berhasil ditambahkan dan stok diperbarui.', 'icon' => 'success'],
-        'deleted' => ['title' => 'Terhapus!', 'text' => 'Data restock berhasil dihapus!', 'icon' => 'success'],
+        'deleted' => ['title' => 'Terhapus!', 'text' => 'Data restock berhasil dihapus dan stok diperbarui.!', 'icon' => 'success'],
         'updated' => ['title' => 'Berhasil!', 'text' => 'Data restock berhasil diperbarui!', 'icon' => 'success'],
         'no_change' => ['title' => 'Tidak Ada Perubahan!', 'text' => 'Data yang Anda masukkan sama dengan yang sudah ada.', 'icon' => 'info'],
         'update_failed' => ['title' => 'Gagal!', 'text' => 'Gagal memperbarui data restock!', 'icon' => 'error'],

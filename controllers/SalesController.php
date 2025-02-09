@@ -24,7 +24,7 @@ class SalesController
         }
     }
 
-    // Mengambil data penjualan berdasarkan ID
+    // Mengambil data penjualan berdasarkan ID dengan logika yang lebih optimal
     public function getSaleById($id)
     {
         try {
@@ -33,14 +33,16 @@ class SalesController
             }
 
             $sale = $this->salesModel->getSaleById($id);
-            if (!$sale) {
-                return ["pesan" => "Penjualan dengan ID tersebut tidak ditemukan."];
-            }
 
-            return $sale;
+            if ($sale) {
+                return $sale; // Penjualan ditemukan, kembalikan data
+            } else {
+                error_log("Penjualan dengan ID $id tidak ditemukan.");
+                return null;
+            }
         } catch (Exception $e) {
-            error_log("Kesalahan saat mengambil data penjualan: " . $e->getMessage());
-            return ["pesan" => "Terjadi kesalahan. Silakan coba lagi nanti."];
+            error_log("Kesalahan saat mengambil data penjualan ID $id: " . $e->getMessage());
+            return null;
         }
     }
 
@@ -83,22 +85,41 @@ class SalesController
     }
 
 
-    // Menghapus data penjualan
-    public function deleteSale($id)
+    // Menghapus data penjualan dan mengembalikan stok
+    public function deleteSaleWithStockRestore($id)
     {
         try {
             if (!is_numeric($id) || $id <= 0) {
                 throw new Exception("ID penjualan tidak valid.");
             }
 
-            $sale = $this->salesModel->getSaleById($id);
+            // Ambil data penjualan sebelum dihapus
+            $sale = $this->getSaleById($id);
             if (!$sale) {
-                return false; // Penjualan tidak ditemukan
+                error_log("Penjualan dengan ID $id tidak ditemukan.");
+                return false;
             }
 
+            // Kembalikan stok produk sesuai dengan jumlah yang terjual
+            $productId = $sale['id_produk'];
+            $quantitySold = $sale['jumlah_terjual'];
+
+            // Ambil data produk
+            $productController = new ProductController($this->db);
+            $product = $productController->getProductById($productId);
+
+            if ($product) {
+                $newStock = $product['stok'] + $quantitySold;
+                $productController->updateStock($productId, $newStock);
+                error_log("Stok produk ID $productId berhasil dikembalikan menjadi $newStock.");
+            } else {
+                error_log("Produk dengan ID $productId tidak ditemukan. Tidak bisa mengembalikan stok.");
+            }
+
+            // Hapus data penjualan
             return $this->salesModel->deleteSale($id);
         } catch (Exception $e) {
-            error_log("Kesalahan saat menghapus penjualan: " . $e->getMessage());
+            error_log("Kesalahan saat menghapus penjualan ID $id: " . $e->getMessage());
             return false;
         }
     }

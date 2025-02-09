@@ -7,7 +7,6 @@ class RestockController
 
     public function __construct($db)
     {
-        // Inisialisasi model Restock dengan koneksi database
         $this->restockModel = new RestockModel($db);
     }
 
@@ -26,6 +25,9 @@ class RestockController
     public function getRestockById($id)
     {
         try {
+            if (!is_numeric($id) || $id <= 0) {
+                throw new Exception("ID Restock tidak valid.");
+            }
             return $this->restockModel->getRestockById($id);
         } catch (Exception $e) {
             error_log("Error in getRestockById: " . $e->getMessage());
@@ -37,7 +39,12 @@ class RestockController
     public function addRestock($data)
     {
         try {
-            return $this->restockModel->addRestock($data);
+            if ($this->validateRestockData($data)) {
+                return $this->restockModel->addRestock($data);
+            } else {
+                error_log("Validasi gagal pada addRestock: " . json_encode($data));
+                return false;
+            }
         } catch (Exception $e) {
             error_log('Error in addRestock: ' . $e->getMessage());
             return false;
@@ -48,18 +55,18 @@ class RestockController
     public function updateRestock($id, $data)
     {
         try {
-            if (
-                !empty($data['id_produk']) &&
-                !empty($data['id_supplier']) &&
-                !empty($data['tanggal_restock']) &&
-                !empty($data['jumlah_ditambahkan']) &&
-                !empty($data['harga_beli'])
-            ) {
-                // Hitung total biaya dari jumlah yang ditambahkan dan harga beli
-                $data['total_biaya'] = $data['jumlah_ditambahkan'] * $data['harga_beli'];
-                return $this->restockModel->updateRestock($id, $data);
+            if (!is_numeric($id) || $id <= 0) {
+                throw new Exception("ID Restock tidak valid.");
             }
-            return false;
+
+            if ($this->validateRestockData($data)) {
+                // Hitung total biaya dari jumlah yang ditambahkan dan harga beli
+                $data['total_biaya'] = $data['jumlah_ditambahkan'] * $data['harga_per_unit'];
+                return $this->restockModel->updateRestock($id, $data);
+            } else {
+                error_log("Validasi gagal pada updateRestock: " . json_encode($data));
+                return false;
+            }
         } catch (Exception $e) {
             error_log('Error in updateRestock: ' . $e->getMessage());
             return false;
@@ -70,10 +77,26 @@ class RestockController
     public function deleteRestock($id)
     {
         try {
+            if (!is_numeric($id) || $id <= 0) {
+                throw new Exception("ID Restock tidak valid.");
+            }
             return $this->restockModel->deleteRestock($id);
         } catch (Exception $e) {
             error_log('Error in deleteRestock: ' . $e->getMessage());
             return false;
         }
+    }
+
+    // ==========================
+    // Fungsi Validasi Data Restock
+    // ==========================
+    private function validateRestockData($data)
+    {
+        return isset($data['id_produk'], $data['id_supplier'], $data['tanggal_restock'], $data['jumlah_ditambahkan'], $data['harga_per_unit']) &&
+            is_numeric($data['id_produk']) && $data['id_produk'] > 0 &&
+            is_numeric($data['id_supplier']) && $data['id_supplier'] > 0 &&
+            !empty($data['tanggal_restock']) &&
+            is_numeric($data['jumlah_ditambahkan']) && $data['jumlah_ditambahkan'] > 0 &&
+            is_numeric($data['harga_per_unit']) && $data['harga_per_unit'] > 0;
     }
 }

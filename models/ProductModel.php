@@ -91,15 +91,18 @@ class ProductModel
     {
         try {
             $query = "INSERT INTO produk (nama_produk, deskripsi, id_kategori, id_satuan, harga, stok)
-                      VALUES (:name, :description, :category, :satuan, :price, :stock)";
+                  VALUES (:name, :description, :category, :satuan, :price, :stock)";
             $stmt = $this->db->prepare($query);
+
+            // Jika stok kosong (''), set NULL
+            $stock = ($data['stock'] === '' || is_null($data['stock'])) ? null : (int)$data['stock'];
 
             $stmt->bindParam(':name', $data['name']);
             $stmt->bindParam(':description', $data['description']);
-            $stmt->bindParam(':category', $data['category']);
-            $stmt->bindParam(':satuan', $data['satuan']);
+            $stmt->bindParam(':category', $data['category'], PDO::PARAM_INT);
+            $stmt->bindParam(':satuan', $data['satuan'], PDO::PARAM_INT);
             $stmt->bindParam(':price', $data['price']);
-            $stmt->bindParam(':stock', $data['stock']);
+            $stmt->bindParam(':stock', $stock, PDO::PARAM_INT);
 
             return $stmt->execute();
         } catch (PDOException $e) {
@@ -118,17 +121,20 @@ class ProductModel
     {
         try {
             $query = "UPDATE produk 
-                      SET nama_produk = :name, deskripsi = :description, id_kategori = :category, 
-                          id_satuan = :satuan, harga = :price, stok = :stock 
-                      WHERE id_produk = :id";
+                  SET nama_produk = :name, deskripsi = :description, id_kategori = :category, 
+                      id_satuan = :satuan, harga = :price, stok = :stock 
+                  WHERE id_produk = :id";
             $stmt = $this->db->prepare($query);
+
+            // Jika stok kosong (''), set NULL
+            $stock = ($data['stock'] === '' || is_null($data['stock'])) ? null : (int)$data['stock'];
 
             $stmt->bindParam(':name', $data['name']);
             $stmt->bindParam(':description', $data['description']);
-            $stmt->bindParam(':category', $data['category']);
-            $stmt->bindParam(':satuan', $data['satuan']);
+            $stmt->bindParam(':category', $data['category'], PDO::PARAM_INT);
+            $stmt->bindParam(':satuan', $data['satuan'], PDO::PARAM_INT);
             $stmt->bindParam(':price', $data['price']);
-            $stmt->bindParam(':stock', $data['stock']);
+            $stmt->bindParam(':stock', $stock, PDO::PARAM_INT);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
             return $stmt->execute();
@@ -137,6 +143,7 @@ class ProductModel
             return false;
         }
     }
+
 
     /**
      * Menghapus produk berdasarkan ID
