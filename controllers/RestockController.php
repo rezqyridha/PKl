@@ -21,6 +21,17 @@ class RestockController
         }
     }
 
+    public function getTotalRestockToday()
+    {
+        try {
+            return $this->restockModel->getTotalRestockToday();
+        } catch (Exception $e) {
+            error_log("Error in getTotalRestockToday: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+
     // Menampilkan data restock berdasarkan ID
     public function getRestockById($id)
     {

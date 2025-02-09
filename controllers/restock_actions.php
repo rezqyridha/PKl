@@ -144,7 +144,6 @@ function sanitizeRestockInput($data)
 function validateRestockData($data)
 {
     return !empty($data['id_produk']) &&
-        !empty($data['id_satuan']) && // Tambahkan validasi untuk id_satuan
         !empty($data['id_supplier']) &&
         !empty($data['tanggal_restock']) &&
         is_numeric($data['jumlah_ditambahkan']) && $data['jumlah_ditambahkan'] > 0 &&

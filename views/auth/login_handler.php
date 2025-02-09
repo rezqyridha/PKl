@@ -9,25 +9,28 @@ $db = $database->getConnection();
 
 $userModel = new UserModel($db);
 
-$username = $_POST['username'];
-$password = $_POST['password'];
+$username = htmlspecialchars(trim($_POST['username']));
+$password = trim($_POST['password']);
 
 // Validasi username
 $user = $userModel->getUserByUsername($username);
 
-// Debugging validasi password
-// var_dump($user, $password, $user['password'], password_verify($password, $user['password']));
-// exit;
-
 if ($user && password_verify($password, $user['password'])) {
     // Login berhasil, simpan session
-    $_SESSION['role'] = $user['role']; // 'admin' atau 'karyawan'
-    $_SESSION['user_id'] = $user['id_pengguna']; // ID pengguna
-    header("Location: ../../views/admin/dashboard.php");
+    $_SESSION['role'] = $user['role'];
+    $_SESSION['user_id'] = $user['id_pengguna'];
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['nama_lengkap'] = $user['nama_lengkap'];
+
+    // Arahkan sesuai role
+    if ($user['role'] === 'admin') {
+        header("Location: ../admin/dashboard.php");
+    } elseif ($user['role'] === 'karyawan') {
+        header("Location: ../employee/dashboard.php");
+    }
     exit();
 } else {
     // Login gagal
-    header("Location: login.php?error=invalid");
+    header("Location: login.php");
     exit();
 }
-?>

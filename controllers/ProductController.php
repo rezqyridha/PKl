@@ -28,6 +28,18 @@ class ProductController
         }
     }
 
+
+    public function getTotalStock()
+    {
+        try {
+            return $this->productModel->getTotalStock();
+        } catch (Exception $e) {
+            error_log("Error in getTotalStock: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+
     /**
      * Mengambil produk berdasarkan ID
      * @param int $id

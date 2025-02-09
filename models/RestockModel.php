@@ -24,8 +24,14 @@ class RestockModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-
-
+    public function getTotalRestockToday()
+    {
+        $query = "SELECT COUNT(*) AS total_restock FROM restock WHERE DATE(tanggal_restock) = CURDATE()";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total_restock'] ?? 0;
+    }
 
 
     // Mendapatkan data restock berdasarkan ID

@@ -35,6 +35,7 @@ class ProductModel
         }
     }
 
+
     /**
      * Mengambil produk berdasarkan ID
      * @param int $id
