@@ -40,12 +40,12 @@ if (!$satuan) {
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Edit Satuan</h1>
-                    <a href="satuan.php" class="btn btn-secondary">Kembali</a>
+                    <a href="satuan.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Satuan</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form edit Satuan</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/satuan_actions.php?action=edit&id=<?= htmlspecialchars($satuan['id_satuan'] ?? ''); ?>" method="POST">

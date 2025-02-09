@@ -25,7 +25,7 @@ if (isset($_SESSION['alert'])) {
         document.addEventListener('DOMContentLoaded', function () {";
 
     $alertMessages = [
-        'added' => ['title' => 'Berhasil!', 'text' => 'Data restock berhasil ditambahkan!', 'icon' => 'success'],
+        'restock_success' => ['title' => 'Berhasil!', 'text' => 'Restock berhasil ditambahkan dan stok diperbarui.', 'icon' => 'success'],
         'deleted' => ['title' => 'Terhapus!', 'text' => 'Data restock berhasil dihapus!', 'icon' => 'success'],
         'updated' => ['title' => 'Berhasil!', 'text' => 'Data restock berhasil diperbarui!', 'icon' => 'success'],
         'no_change' => ['title' => 'Tidak Ada Perubahan!', 'text' => 'Data yang Anda masukkan sama dengan yang sudah ada.', 'icon' => 'info'],

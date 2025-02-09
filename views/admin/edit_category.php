@@ -38,12 +38,12 @@ if (!$category) {
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Edit Kategori</h1>
-                    <a href="categories.php" class="btn btn-secondary">Kembali</a>
+                    <a href="categories.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Kategori</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Edit Kategori</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/category_actions.php?action=edit&id=<?= $category['id_kategori']; ?>" method="POST">

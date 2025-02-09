@@ -19,7 +19,7 @@ $productController = new ProductController($db);
 $supplierController = new SupplierController($db);
 
 // Ambil data produk dan supplier
-$products = $productController->getAllProducts();
+$products = $productController->showAllProducts();
 $suppliers = $supplierController->getAllSuppliers();
 
 ?>
@@ -34,12 +34,12 @@ $suppliers = $supplierController->getAllSuppliers();
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Tambah Restock Baru</h1>
-                    <a href="restock.php" class="btn btn-secondary">Kembali</a>
+                    <a href="restock.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Restock Baru</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Restock Baru</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/restock_actions.php?action=add" method="POST">
@@ -88,7 +88,7 @@ $suppliers = $supplierController->getAllSuppliers();
                             </div>
 
 
-                            <button type="submit" class="btn btn-primary">Tambahkan Restock</button>
+                            <button type="submit" class="btn btn-primary">Simpan Restock</button>
                         </form>
                     </div>
                 </div>

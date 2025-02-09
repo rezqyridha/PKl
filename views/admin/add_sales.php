@@ -19,7 +19,7 @@ $user = $userModel->getUserById($_SESSION['user_id']);
 
 // Product Controller
 $productController = new ProductController($db);
-$products = $productController->getAllProducts();
+$products = $productController->showAllProducts();
 
 // Customer Controller
 $customerController = new CustomerController($db);
@@ -36,12 +36,12 @@ $customers = $customerController->getAllCustomers();
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Tambah Penjualan Baru</h1>
-                    <a href="sales.php" class="btn btn-secondary">Kembali</a>
+                    <a href="sales.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Penjualan Baru</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Penjualan Baru</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/sales_actions.php?action=add" method="POST">
@@ -92,7 +92,7 @@ $customers = $customerController->getAllCustomers();
                                 <span id="total_harga_display" class="form-control bg-light" readonly></span>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Tambahkan Penjualan</button>
+                            <button type="submit" class="btn btn-primary">Simpan Penjualan</button>
                         </form>
                     </div>
                 </div>

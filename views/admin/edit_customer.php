@@ -100,12 +100,12 @@ if (isset($_GET['error']) && $_GET['error'] == 'no_change') {
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Edit Pelanggan</h1>
-                    <a href="customers.php" class="btn btn-secondary">Kembali</a>
+                    <a href="customers.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Pelanggan</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Edit Pelanggan</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/customer_actions.php?action=edit&id=<?= $customer['id_pelanggan'] ?>" method="POST">

@@ -26,11 +26,11 @@ $supplierController = new SupplierController($db);
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Tambah Supplier Baru</h1>
-                    <a href="suppliers.php" class="btn btn-secondary">Kembali</a>
+                    <a href="suppliers.php" class="btn btn-secondary">Batal</a>
                 </div>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Supplier Baru</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Supplier Baru</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/supplier_actions.php?action=add" method="POST">
@@ -46,7 +46,7 @@ $supplierController = new SupplierController($db);
                                 <label for="alamat_supplier">Alamat</label>
                                 <textarea class="form-control" id="alamat" name="alamat" placeholder="Masukkan alamat supplier"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Tambah Supplier</button>
+                            <button type="submit" class="btn btn-primary">Simpan Supplier</button>
                         </form>
                     </div>
                 </div>

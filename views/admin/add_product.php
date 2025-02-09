@@ -38,12 +38,12 @@ $satuan = $productController->getAllSatuan();  // Ambil data satuan
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Tambah Produk Baru</h1>
-                    <a href="products.php" class="btn btn-secondary">Kembali</a>
+                    <a href="products.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Produk Baru</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Produk Baru</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/product_actions.php?action=add" method="POST">
@@ -93,7 +93,7 @@ $satuan = $productController->getAllSatuan();  // Ambil data satuan
                                 <input type="number" class="form-control" id="stock" name="stock" placeholder="Masukkan jumlah stok tersedia" required>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Tambahkan Produk</button>
+                            <button type="submit" class="btn btn-primary">Simpan Produk</button>
                         </form>
                     </div>
                 </div>

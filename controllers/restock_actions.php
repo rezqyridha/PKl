@@ -1,17 +1,19 @@
 <?php
 require_once __DIR__ . '../../config/database.php';
 require_once __DIR__ . '../../controllers/RestockController.php';
+require_once __DIR__ . '../../controllers/ProductController.php'; // Tambahkan ProductController
 session_start();
 
 $action = $_GET['action'] ?? '';
 $database = new Database();
 $db = $database->getConnection();
 $restockController = new RestockController($db);
+$productController = new ProductController($db); // Inisialisasi ProductController
 
 try {
     switch ($action) {
         case 'add':
-            handleAddRestock($restockController);
+            handleAddRestock($restockController, $productController);
             break;
 
         case 'edit':
@@ -38,7 +40,7 @@ exit();
 // Fungsi Handler
 // ==============================
 
-function handleAddRestock($restockController)
+function handleAddRestock($restockController, $productController)
 {
     $data = sanitizeRestockInput($_POST);
     error_log("Data diterima di restock_actions.php (add): " . json_encode($data));
@@ -46,7 +48,20 @@ function handleAddRestock($restockController)
     if (validateRestockData($data)) {
         $data['total_biaya'] = $data['jumlah_ditambahkan'] * $data['harga_per_unit'];
         $result = $restockController->addRestock($data);
-        $_SESSION['alert'] = $result ? 'added' : 'add_failed';
+
+        if ($result) {
+            // Perbarui stok produk setelah restock berhasil
+            $product = $productController->getProductById($data['id_produk']);
+            if ($product) {
+                $newStock = $product['stok'] + $data['jumlah_ditambahkan'];
+                $productController->updateStock($data['id_produk'], $newStock);
+                error_log("Stok produk ID {$data['id_produk']} diperbarui menjadi: $newStock");
+            }
+
+            $_SESSION['alert'] = 'restock_success';
+        } else {
+            $_SESSION['alert'] = 'add_failed';
+        }
     } else {
         $_SESSION['alert'] = 'validation_error';
     }

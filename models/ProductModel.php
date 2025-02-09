@@ -19,15 +19,20 @@ class ProductModel
      */
     public function getAllProducts()
     {
-        $query = "
-            SELECT produk.*, kategori.nama_kategori, satuan.nama_satuan
-            FROM produk
-            LEFT JOIN kategori ON produk.id_kategori = kategori.id_kategori
-            LEFT JOIN satuan ON produk.id_satuan = satuan.id_satuan
-        ";
-        $stmt = $this->db->prepare($query);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        try {
+            $query = "
+                SELECT produk.*, kategori.nama_kategori, satuan.nama_satuan
+                FROM produk
+                LEFT JOIN kategori ON produk.id_kategori = kategori.id_kategori
+                LEFT JOIN satuan ON produk.id_satuan = satuan.id_satuan
+            ";
+            $stmt = $this->db->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Kesalahan saat mengambil semua produk: " . $e->getMessage());
+            return [];
+        }
     }
 
     /**
@@ -37,11 +42,16 @@ class ProductModel
      */
     public function getProductById($id)
     {
-        $query = "SELECT * FROM produk WHERE id_produk = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            $query = "SELECT * FROM produk WHERE id_produk = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Kesalahan saat mengambil produk ID $id: " . $e->getMessage());
+            return null;
+        }
     }
 
     /**
@@ -52,11 +62,24 @@ class ProductModel
      */
     public function updateStock($id, $newStock)
     {
-        $query = "UPDATE produk SET stok = :stok WHERE id_produk = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':stok', $newStock);
-        $stmt->bindParam(':id', $id);
-        return $stmt->execute();
+        try {
+            $query = "UPDATE produk SET stok = :stok WHERE id_produk = :id";
+            $stmt = $this->db->prepare($query);
+            $stmt->bindParam(':stok', $newStock, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $result = $stmt->execute();
+
+            if ($result) {
+                error_log("Stok produk ID $id berhasil diperbarui menjadi $newStock.");
+            } else {
+                error_log("Gagal memperbarui stok produk ID $id.");
+            }
+
+            return $result;
+        } catch (PDOException $e) {
+            error_log("Kesalahan saat memperbarui stok produk ID $id: " . $e->getMessage());
+            return false;
+        }
     }
 
     /**
@@ -71,7 +94,6 @@ class ProductModel
                       VALUES (:name, :description, :category, :satuan, :price, :stock)";
             $stmt = $this->db->prepare($query);
 
-            // Bind parameter
             $stmt->bindParam(':name', $data['name']);
             $stmt->bindParam(':description', $data['description']);
             $stmt->bindParam(':category', $data['category']);
@@ -81,7 +103,7 @@ class ProductModel
 
             return $stmt->execute();
         } catch (PDOException $e) {
-            error_log("Gagal menambahkan produk: " . $e->getMessage());
+            error_log("Kesalahan saat menambahkan produk: " . $e->getMessage());
             return false;
         }
     }
@@ -101,7 +123,6 @@ class ProductModel
                       WHERE id_produk = :id";
             $stmt = $this->db->prepare($query);
 
-            // Bind parameter
             $stmt->bindParam(':name', $data['name']);
             $stmt->bindParam(':description', $data['description']);
             $stmt->bindParam(':category', $data['category']);
@@ -112,7 +133,7 @@ class ProductModel
 
             return $stmt->execute();
         } catch (PDOException $e) {
-            error_log("Gagal memperbarui produk: " . $e->getMessage());
+            error_log("Kesalahan saat memperbarui produk ID $id: " . $e->getMessage());
             return false;
         }
     }

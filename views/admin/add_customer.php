@@ -65,12 +65,12 @@ $provinsi = [
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Tambah Pelanggan Baru</h1>
-                    <a href="customers.php" class="btn btn-secondary">Kembali</a>
+                    <a href="customers.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Tambah Pelanggan</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Pelanggan Baru</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/customer_actions.php?action=add" method="POST">
@@ -102,7 +102,7 @@ $provinsi = [
                                     ?>
                                 </select>
                             </div>
-                            <button type="submit" class="btn btn-primary">Tambah Pelanggan</button>
+                            <button type="submit" class="btn btn-primary">Simpan Pelanggan</button>
                         </form>
                     </div>
                 </div>

@@ -44,12 +44,12 @@ $alamat_supplier = $supplier['alamat'] ?? '';
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Edit Supplier</h1>
-                    <a href="suppliers.php" class="btn btn-secondary">Kembali</a>
+                    <a href="suppliers.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Supplier</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Edit Supplier</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/supplier_actions.php?action=edit&id=<?= $id_supplier; ?>" method="POST">

@@ -29,12 +29,13 @@
     border-radius: 5px;
 }
 
-/* Tampilan heading dalam sidebar agar lebih kontras */
-.sidebar-heading {
-    text-transform: uppercase;
-    font-weight: bold;
-    font-size: 0.85rem;
-    color: #d1d3e2;
+/* Sidebar Collapsed Styling */
+.sidebar {
+    width: 250px;
+    transition: all 0.3s ease;
+}
+body.sidebar-toggled .sidebar {
+    width: 80px;
 }
 
 /* ====================================== */

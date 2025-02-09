@@ -26,12 +26,12 @@ $user = $userModel->getUserById($_SESSION['user_id']);
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Tambah Kategori Baru</h1>
-                    <a href="categories.php" class="btn btn-secondary">Kembali</a>
+                    <a href="categories.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Kategori Baru</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Kategori Baru</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/category_actions.php?action=add" method="POST">
@@ -40,7 +40,7 @@ $user = $userModel->getUserById($_SESSION['user_id']);
                                 <input type="text" class="form-control" id="nama_kategori" name="nama_kategori"
                                     placeholder="Masukkan nama kategori" required>
                             </div>
-                            <button type="submit" class="btn btn-primary">Tambah Kategori</button>
+                            <button type="submit" class="btn btn-primary">Simpan Kategori</button>
                         </form>
                     </div>
                 </div>

@@ -105,17 +105,25 @@ echo "<!-- Current Page: $page -->"; // Debugging
         <div id="collapseReports" class="collapse" aria-labelledby="headingReports" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Laporan Analisis:</h6>
-                <a class="collapse-item" href="../admin/reports/sales_by_product.php"><i class="fas fa-chart-bar"></i> Penjualan per Produk</a>
-                <a class="collapse-item" href="../admin/reports/restock_expense.php"><i class="fas fa-file-invoice-dollar"></i> Pengeluaran Restock</a>
-                <a class="collapse-item" href="../admin/reports/stock_report.php"><i class="fas fa-boxes"></i> Stok Produk</a>
-                <a class="collapse-item" href="../admin/reports/user_activity.php"><i class="fas fa-user-clock"></i> Aktivitas Pengguna</a>
-                <a class="collapse-item" href="../admin/reports/sales_by_region.php"><i class="fas fa-map-marked-alt"></i> Penjualan Wilayah</a>
-                <a class="collapse-item" href="../admin/reports/best_selling_products.php"><i class="fas fa-star"></i> Produk Terlaris</a>
-                <a class="collapse-item" href="../admin/reports/active_suppliers.php"><i class="fas fa-handshake"></i> Supplier Aktif</a>
-                <a class="collapse-item" href="../admin/reports/profitability.php"><i class="fas fa-money-bill-wave"></i> Profitabilitas</a>
+                <a class="collapse-item" href="../admin/reports/sales_by_product.php">
+                    <i class="fas fa-chart-bar"></i> Penjualan per Produk
+                </a>
+                <a class="collapse-item" href="../admin/reports/restock_expense.php">
+                    <i class="fas fa-file-invoice-dollar"></i> Pengeluaran Restock
+                </a>
+                <a class="collapse-item" href="../admin/reports/stock_report.php">
+                    <i class="fas fa-boxes"></i> Stok Produk
+                </a>
+                <a class="collapse-item" href="../admin/reports/best_selling_products.php">
+                    <i class="fas fa-star"></i> Produk Terlaris
+                </a>
+                <a class="collapse-item" href="../admin/reports/profitability.php">
+                    <i class="fas fa-money-bill-wave"></i> Profitabilitas
+                </a>
             </div>
         </div>
     </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">
@@ -127,5 +135,11 @@ echo "<!-- Current Page: $page -->"; // Debugging
             <span>Logout</span>
         </a>
     </li>
+
+    <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle">
+        </button>
+    </div>
+
 
 </ul>

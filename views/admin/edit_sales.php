@@ -18,7 +18,7 @@ $productController = new ProductController($db);
 $customerController = new CustomerController($db);
 
 // Ambil data produk dan pelanggan
-$products = $productController->getAllProducts();
+$products = $productController->showAllProducts();
 $customers = $customerController->getAllCustomers();
 
 // Validasi ID penjualan
@@ -45,12 +45,12 @@ if (!$sale) {
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h1 class="h3 text-gray-800">Edit Penjualan</h1>
-                    <a href="sales.php" class="btn btn-secondary">Kembali</a>
+                    <a href="sales.php" class="btn btn-secondary">Batal</a>
                 </div>
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Detail Penjualan</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Form Edit Penjualan</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/sales_actions.php?action=edit&id=<?= $sale['id_penjualan']; ?>" method="POST">
