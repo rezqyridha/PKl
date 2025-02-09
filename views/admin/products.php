@@ -76,7 +76,10 @@ if (isset($_SESSION['alert'])) {
 
 <div id="wrapper">
     <!-- Sidebar -->
-    <?php include '../layouts/sidebar.php'; ?>
+    <?php
+    $page = 'products';
+    include '../layouts/sidebar.php';
+    ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">

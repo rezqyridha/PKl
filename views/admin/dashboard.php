@@ -24,7 +24,9 @@ $data = $adminController->getDashboardData();
 
 <div id="wrapper">
     <!-- Sidebar -->
-    <?php include '../layouts/sidebar.php'; ?>
+    <?php
+    $page = 'dashboard';
+    include '../layouts/sidebar.php'; ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">

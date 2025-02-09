@@ -1,6 +1,7 @@
 <?php
 include '../../config/database.php';
 require_once '../../models/UserModel.php';
+require_once '../../models/ProductModel.php';
 
 session_start();
 
@@ -14,10 +15,8 @@ $conn = (new Database())->getConnection(); // Ambil koneksi database
 $userModel = new UserModel($conn);
 $user = $userModel->getUserById($_SESSION['user_id']);
 
-$query = "SELECT id_produk, nama_produk, stok FROM produk WHERE stok <= 5 ORDER BY stok ASC";
-$stmt = $conn->prepare($query);
-$stmt->execute();
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$productModel = new ProductModel($conn);
+$lowStockProducts = $productModel->getLowStockProducts();
 ?>
 
 <!DOCTYPE html>
@@ -44,8 +43,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </tr>
             </thead>
             <tbody>
-                <?php if (count($products) > 0) : ?>
-                    <?php foreach ($products as $index => $product) : ?>
+                <?php if (count($lowStockProducts) > 0) : ?>
+                    <?php foreach ($lowStockProducts as $index => $product) : ?>
                         <tr>
                             <td><?= $index + 1; ?></td>
                             <td><?= htmlspecialchars($product['nama_produk']); ?></td>

@@ -24,16 +24,11 @@ CREATE TABLE IF NOT EXISTS `kategori` (
   `id_kategori` int NOT NULL AUTO_INCREMENT,
   `nama_kategori` varchar(100) NOT NULL,
   PRIMARY KEY (`id_kategori`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.kategori: ~6 rows (approximately)
+-- Dumping data for table manajemen_madu.kategori: ~0 rows (approximately)
 INSERT INTO `kategori` (`id_kategori`, `nama_kategori`) VALUES
-	(1, 'Hutan'),
-	(2, 'Kelulut'),
-	(3, 'Randu'),
-	(4, 'Bunga'),
-	(7, 'Minuman Sehat Banget'),
-	(12, 'Produk Organik 1');
+	(1, 'Hutan');
 
 -- Dumping structure for table manajemen_madu.log_aktivitas
 CREATE TABLE IF NOT EXISTS `log_aktivitas` (
@@ -59,15 +54,11 @@ CREATE TABLE IF NOT EXISTS `pelanggan` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_pelanggan`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.pelanggan: ~5 rows (approximately)
+-- Dumping data for table manajemen_madu.pelanggan: ~1 rows (approximately)
 INSERT INTO `pelanggan` (`id_pelanggan`, `nama_pelanggan`, `kontak`, `alamat`, `kota`, `provinsi`, `created_at`, `updated_at`) VALUES
-	(1, 'John Doe', '081234567899', 'Jalan Raya No. 123', 'Jakarta', 'DKI Jakarta', '2025-01-02 09:25:44', '2025-01-02 09:25:44'),
-	(2, 'Jane Smith', '081234567898', 'Jalan Melati No. 456', 'Bandung', 'Jawa Barat', '2025-01-02 09:25:44', '2025-01-02 09:25:44'),
-	(3, 'Michael Johnson', '081234567897', 'Jalan Mawar No. 789', 'Surabaya', 'Jawa Timur', '2025-01-02 09:25:44', '2025-01-02 09:25:44'),
-	(4, 'Emily Davis', '081234567896', 'Jalan Anggrek No. 321', 'Medan', 'Sumatera Utara', '2025-01-02 09:25:44', '2025-01-02 09:25:44'),
-	(9, 'Budi', '02598498451', 'Jl.Pramuka No 44', 'Banjarmasin', 'Kalimantan Selatan', '2025-01-03 21:34:24', '2025-01-03 21:39:15');
+	(1, 'Budi', '08786', 'Jl.Pramuka No 44', 'Banjarmasin', 'Kalimantan Selatan', '2025-02-08 06:33:48', '2025-02-08 06:33:48');
 
 -- Dumping structure for table manajemen_madu.pengguna
 CREATE TABLE IF NOT EXISTS `pengguna` (
@@ -83,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `pengguna` (
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.pengguna: ~1 rows (approximately)
+-- Dumping data for table manajemen_madu.pengguna: ~0 rows (approximately)
 INSERT INTO `pengguna` (`id_pengguna`, `username`, `password`, `nama_lengkap`, `email`, `kontak`, `role`) VALUES
 	(1, 'admin', '$2y$10$4XAZcOa.PgnSaFxVS8QoWebIv42L3mbUIA04ueAc/aZ4gpH0e39lG', 'Admin 1', 'admin1@example.com', '081234567890', 'admin');
 
@@ -102,9 +93,12 @@ CREATE TABLE IF NOT EXISTS `penjualan` (
   KEY `id_pelanggan` (`id_pelanggan`),
   CONSTRAINT `penjualan_ibfk_1` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`),
   CONSTRAINT `penjualan_ibfk_2` FOREIGN KEY (`id_pelanggan`) REFERENCES `pelanggan` (`id_pelanggan`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table manajemen_madu.penjualan: ~0 rows (approximately)
+INSERT INTO `penjualan` (`id_penjualan`, `id_produk`, `id_pelanggan`, `tanggal_penjualan`, `jumlah_terjual`, `total_harga`, `created_at`, `updated_at`) VALUES
+	(9, 1, 1, '2025-02-06', 5, 250000.00, '2025-02-08 08:27:38', '2025-02-08 08:27:38'),
+	(11, 1, 1, '2025-01-27', 1, 50000.00, '2025-02-08 08:38:54', '2025-02-08 08:48:26');
 
 -- Dumping structure for table manajemen_madu.produk
 CREATE TABLE IF NOT EXISTS `produk` (
@@ -122,23 +116,21 @@ CREATE TABLE IF NOT EXISTS `produk` (
   KEY `id_satuan` (`id_satuan`),
   CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_kategori`) REFERENCES `kategori` (`id_kategori`),
   CONSTRAINT `produk_ibfk_2` FOREIGN KEY (`id_satuan`) REFERENCES `satuan` (`id_satuan`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.produk: ~5 rows (approximately)
+-- Dumping data for table manajemen_madu.produk: ~1 rows (approximately)
 INSERT INTO `produk` (`id_produk`, `nama_produk`, `deskripsi`, `id_kategori`, `id_satuan`, `harga`, `stok`, `created_at`, `updated_at`) VALUES
-	(13, 'Madu Hutan', 'Madu hutan murni dengan kualitas terbaik', 1, 1, 150000, 50, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
-	(14, 'Madu Kelulut', 'Madu kelulut alami, berkhasiat untuk kesehatan', 2, 1, 200000, 30, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
-	(15, 'Madu Pahit', 'Madu pahit untuk kesehatan, kaya antioksidan', 3, 3, 180000, 20, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
-	(16, 'Madu Spesial', 'Madu premium, khasiat ganda', 1, 4, 220000, 10, '2025-02-05 10:39:20', '2025-02-05 10:39:20'),
-	(17, 'Madu Obat', 'Madu obat untuk meningkatkan stamina', 4, 5, 250000, 25, '2025-02-05 10:39:20', '2025-02-05 10:39:20');
+	(1, 'Madu Hutan', 'Madu Asli Dari Hutan', 1, 3, 50000, 50, '2025-02-08 06:32:48', '2025-02-08 06:32:48');
 
 -- Dumping structure for table manajemen_madu.restock
 CREATE TABLE IF NOT EXISTS `restock` (
   `id_restock` int NOT NULL AUTO_INCREMENT,
   `id_produk` int NOT NULL,
   `id_supplier` int NOT NULL,
-  `tanggal_restock` date NOT NULL,
+  `tanggal_restock` datetime NOT NULL,
   `jumlah_ditambahkan` int NOT NULL,
+  `harga_per_unit` decimal(10,2) NOT NULL,
+  `total_biaya` decimal(12,2) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_restock`),
@@ -146,9 +138,12 @@ CREATE TABLE IF NOT EXISTS `restock` (
   KEY `id_supplier` (`id_supplier`),
   CONSTRAINT `restock_ibfk_1` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id_produk`),
   CONSTRAINT `restock_ibfk_2` FOREIGN KEY (`id_supplier`) REFERENCES `supplier` (`id_supplier`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table manajemen_madu.restock: ~0 rows (approximately)
+INSERT INTO `restock` (`id_restock`, `id_produk`, `id_supplier`, `tanggal_restock`, `jumlah_ditambahkan`, `harga_per_unit`, `total_biaya`, `created_at`, `updated_at`) VALUES
+	(2, 1, 1, '2024-12-18 00:00:00', 1000, 40000.00, 40000000.00, '2025-02-08 10:36:31', '2025-02-08 10:36:31'),
+	(4, 1, 1, '2025-01-29 17:57:00', 1000, 1000.00, 1000000.00, '2025-02-08 10:57:39', '2025-02-08 10:57:39');
 
 -- Dumping structure for table manajemen_madu.satuan
 CREATE TABLE IF NOT EXISTS `satuan` (
@@ -158,33 +153,30 @@ CREATE TABLE IF NOT EXISTS `satuan` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_satuan`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table manajemen_madu.satuan: ~5 rows (approximately)
 INSERT INTO `satuan` (`id_satuan`, `nama_satuan`, `deskripsi`, `created_at`, `updated_at`) VALUES
-	(1, '50 ml', 'Botol kecil ukuran 50 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
-	(2, '100 ml', 'Botol sedang ukuran 100 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
-	(3, '250 ml', 'Botol besar ukuran 250 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
-	(4, '500 ml', 'Botol ukuran 500 ml', '2025-02-05 10:30:52', '2025-02-05 10:30:52'),
-	(5, '1 liter', 'Botol ukuran 1 liter', '2025-02-05 10:30:52', '2025-02-05 10:30:52');
+	(1, '50 ml', 'Botol kecil ukuran 50 ml', '2025-02-08 06:28:25', '2025-02-08 06:28:25'),
+	(2, '100 ml', 'Botol sedang ukuran 100 ml', '2025-02-08 06:28:25', '2025-02-08 06:28:25'),
+	(3, '250 ml', 'Botol besar ukuran 250 ml', '2025-02-08 06:28:25', '2025-02-08 06:28:25'),
+	(4, '500 ml', 'Botol ukuran 500 ml', '2025-02-08 06:28:25', '2025-02-08 06:28:25'),
+	(5, '1 liter', 'Botol ukuran 1 liter', '2025-02-08 06:28:25', '2025-02-08 06:28:25');
 
 -- Dumping structure for table manajemen_madu.supplier
 CREATE TABLE IF NOT EXISTS `supplier` (
   `id_supplier` int NOT NULL AUTO_INCREMENT,
-  `nama_supplier` varchar(100) NOT NULL,
-  `kontak_supplier` varchar(20) DEFAULT NULL,
-  `alamat_supplier` text,
+  `nama` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `kontak` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `alamat` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_supplier`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Dumping data for table manajemen_madu.supplier: ~4 rows (approximately)
-INSERT INTO `supplier` (`id_supplier`, `nama_supplier`, `kontak_supplier`, `alamat_supplier`, `created_at`, `updated_at`) VALUES
-	(1, 'budi', '02065001', 'Jl.Api', '2025-01-03 22:19:14', '2025-01-03 22:19:14'),
-	(2, 'Randi', '5848945515', 'Jl. Air', '2025-01-04 03:31:23', '2025-01-04 03:31:23'),
-	(3, 'adi', '55165156158', 'Jl. AB', '2025-01-04 03:34:08', '2025-01-04 03:34:08'),
-	(4, 'Juan', '1315212', 'Banjarmasin', '2025-01-09 01:11:40', '2025-01-09 01:11:40');
+-- Dumping data for table manajemen_madu.supplier: ~1 rows (approximately)
+INSERT INTO `supplier` (`id_supplier`, `nama`, `kontak`, `alamat`, `created_at`, `updated_at`) VALUES
+	(1, 'Dandi', '01282', 'Banjarmasin', '2025-02-08 06:33:13', '2025-02-08 06:33:13');
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

@@ -1,30 +1,50 @@
 <?php
+
 require_once '../config/database.php';
 require_once 'SalesController.php';
+require_once 'ProductController.php';
 
 session_start(); // Pastikan session dimulai
 
 $action = $_GET['action'] ?? '';
+if (!in_array($action, ['add', 'edit', 'delete'])) {
+    echo "<!-- Debug: Invalid Action -->";
+    $_SESSION['alert'] = 'invalid_action';
+    header("Location: ../views/admin/sales.php");
+    exit();
+}
+
 
 $database = new Database();
 $db = $database->getConnection();
 $salesController = new SalesController($db);
+$productController = new ProductController($db); // Tambahkan ProductController untuk logika stok
 
 // Menangani aksi tambah penjualan
 if ($action == 'add') {
     $data = sanitizeInput($_POST);
+    $productId = $data['product_id'] ?? 0;
+    $quantitySold = $data['quantity'] ?? 0;
 
-    if (validateSaleData($data)) {
-        $result = $salesController->addSale($data);
+    if ($productId && $quantitySold > 0) {
+        $product = $productController->getProductById($productId);
+        if ($product && $product['stok'] >= $quantitySold) {
+            // Kurangi stok produk
+            $newStock = $product['stok'] - $quantitySold;
+            $productController->updateStock($productId, $newStock);
 
-        $_SESSION['alert'] = $result ? 'added' : 'add_failed';
-        header("Location: ../views/admin/sales.php");
-        exit();
+            // Tambahkan penjualan ke tabel penjualan
+            $result = $salesController->addSale($data);
+
+            $_SESSION['alert'] = $result ? 'added' : 'add_failed';
+        } else {
+            $_SESSION['alert'] = 'insufficient_stock'; // Notifikasi stok tidak cukup
+        }
     } else {
-        $_SESSION['alert'] = 'validation_error';
-        header("Location: ../views/admin/sales.php");
-        exit();
+        $_SESSION['alert'] = 'invalid_input'; // Notifikasi input tidak valid
     }
+    header("Location: ../views/admin/sales.php");
+    exit();
 }
 
 // Menangani aksi edit penjualan

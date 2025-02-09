@@ -16,7 +16,8 @@ $supplierController = new SupplierController($db);
 ?>
 
 <div id="wrapper">
-    <?php include '../layouts/sidebar.php'; ?>
+    <?php $page = 'suppliers';
+    include '../layouts/sidebar.php'; ?>
 
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
@@ -24,12 +25,12 @@ $supplierController = new SupplierController($db);
 
             <div class="container-fluid">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h3 text-gray-800">Tambah Supplier</h1>
+                    <h1 class="h3 text-gray-800">Tambah Supplier Baru</h1>
                     <a href="suppliers.php" class="btn btn-secondary">Kembali</a>
                 </div>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Tambah Supplier</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Detail Supplier Baru</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/supplier_actions.php?action=add" method="POST">

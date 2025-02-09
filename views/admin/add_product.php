@@ -27,7 +27,9 @@ $satuan = $productController->getAllSatuan();  // Ambil data satuan
 ?>
 
 <div id="wrapper">
-    <?php include '../layouts/sidebar.php'; ?>
+    <?php
+    $page = 'products';
+    include '../layouts/sidebar.php'; ?>
 
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">

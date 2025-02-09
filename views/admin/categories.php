@@ -39,7 +39,9 @@ if (isset($_SESSION['alert'])) {
 ?>
 
 <div id="wrapper">
-    <?php include '../layouts/sidebar.php'; ?>
+    <?php
+    $page = 'categories';
+    include '../layouts/sidebar.php'; ?>
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
             <?php include '../layouts/header.php'; ?>

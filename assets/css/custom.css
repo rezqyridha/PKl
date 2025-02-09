@@ -9,9 +9,18 @@
 }
 
 /* Indikator menu aktif pada sidebar */
-.nav-item.active {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-left: 4px solid white;
+.nav-item.active > .nav-link {
+    background-color: #2e59d9; /* Biru lebih gelap */
+    color: white; /* Warna teks putih */
+    font-weight: bold; /* Teks lebih tebal */
+    border-left: 4px solid #f6c23e; /* Border kiri berwarna kuning emas */
+    border-radius: 5px; /* Membuat sudut lebih halus */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Memberikan efek bayangan */
+}
+
+.nav-item.active > .nav-link:hover {
+    background-color: #224abe; /* Biru lebih gelap saat di-hover */
+    color: #f8f9fc; /* Warna teks lebih terang */
 }
 
 /* Efek hover untuk submenu dalam dropdown */

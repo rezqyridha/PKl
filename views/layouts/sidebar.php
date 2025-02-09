@@ -1,3 +1,11 @@
+<?php
+$page = $page ?? ''; // Beri nilai default kosong jika $page belum didefinisikan
+?>
+
+<?php
+echo "<!-- Current Page: $page -->"; // Debugging
+?>
+
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
@@ -38,6 +46,14 @@
         <a class="nav-link" href="../admin/categories.php">
             <i class="fas fa-tags"></i>
             <span>Kelola Kategori</span>
+        </a>
+    </li>
+
+    <!-- Kelola Satuan -->
+    <li class="nav-item <?= ($page == 'satuan') ? 'active' : '' ?>">
+        <a class="nav-link" href="../admin/satuan.php">
+            <i class="fas fa-balance-scale"></i>
+            <span>Kelola Satuan</span>
         </a>
     </li>
 

@@ -37,6 +37,9 @@ if (isset($_SESSION['alert'])) {
             echo "Swal.fire({ title: 'Tidak Ada Perubahan!', text: 'Data yang Anda masukkan sama dengan yang sudah ada.',
                 icon: 'info' });";
             break;
+        case 'insufficient_stock':
+            echo "Swal.fire({ title: 'Gagal!', text: 'Stok tidak mencukupi untuk penjualan ini.', icon: 'error' });";
+            break;
         case 'add_failed':
             echo "Swal.fire({ title: 'Gagal!', text: 'Gagal menambahkan penjualan!', icon: 'error' });";
             break;
@@ -64,7 +67,9 @@ if (isset($_SESSION['alert'])) {
 
 <div id="wrapper">
     <!-- Sidebar -->
-    <?php include '../layouts/sidebar.php'; ?>
+    <?php
+    $page = 'sales';
+    include '../layouts/sidebar.php'; ?>
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">

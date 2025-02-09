@@ -34,7 +34,8 @@ $alamat_supplier = $supplier['alamat'] ?? '';
 ?>
 
 <div id="wrapper">
-    <?php include '../layouts/sidebar.php'; ?>
+    <?php $page = 'suppliers';
+    include '../layouts/sidebar.php'; ?>
 
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
@@ -48,7 +49,7 @@ $alamat_supplier = $supplier['alamat'] ?? '';
 
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
-                        <h6 class="m-0 font-weight-bold text-primary">Form Edit Supplier</h6>
+                        <h6 class="m-0 font-weight-bold text-primary">Detail Supplier</h6>
                     </div>
                     <div class="card-body">
                         <form action="../../controllers/supplier_actions.php?action=edit&id=<?= $id_supplier; ?>" method="POST">

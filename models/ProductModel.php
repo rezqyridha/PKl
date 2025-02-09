@@ -1,6 +1,7 @@
 <?php
 class ProductModel
 {
+    const STOK_MINIMUM = 10; // Konstanta untuk batas stok minimum
     private $db;
 
     public function __construct($db)
@@ -31,16 +32,31 @@ class ProductModel
 
     /**
      * Mengambil produk berdasarkan ID
-     * @param int $id ID produk
+     * @param int $id
      * @return array|null Data produk atau null jika tidak ditemukan
      */
     public function getProductById($id)
     {
         $query = "SELECT * FROM produk WHERE id_produk = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Memperbarui stok produk berdasarkan ID
+     * @param int $id
+     * @param int $newStock
+     * @return bool True jika berhasil, False jika gagal
+     */
+    public function updateStock($id, $newStock)
+    {
+        $query = "UPDATE produk SET stok = :stok WHERE id_produk = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':stok', $newStock);
+        $stmt->bindParam(':id', $id);
+        return $stmt->execute();
     }
 
     /**
@@ -132,12 +148,12 @@ class ProductModel
     }
 
     /**
-     * Menghitung jumlah produk yang hampir habis (stok ≤ 5)
-     * @return int Total produk hampir habis
+     * Menghitung jumlah produk dengan stok rendah
+     * @return int Total produk dengan stok rendah
      */
     public function getLowStockCount()
     {
-        $query = "SELECT COUNT(*) AS total FROM produk WHERE stok <= 5";
+        $query = "SELECT COUNT(*) AS total FROM produk WHERE stok <= " . self::STOK_MINIMUM;
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -145,12 +161,12 @@ class ProductModel
     }
 
     /**
-     * Mengambil daftar produk yang hampir habis (stok ≤ 5)
-     * @return array Daftar produk hampir habis
+     * Mengambil daftar produk dengan stok rendah
+     * @return array Daftar produk dengan stok rendah
      */
     public function getLowStockProducts()
     {
-        $query = "SELECT id_produk, nama_produk, stok FROM produk WHERE stok <= 5 ORDER BY stok ASC";
+        $query = "SELECT id_produk, nama_produk, stok FROM produk WHERE stok <= " . self::STOK_MINIMUM . " ORDER BY stok ASC";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

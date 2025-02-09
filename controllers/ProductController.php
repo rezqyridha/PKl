@@ -14,14 +14,16 @@ class ProductController
         $this->productModel = new ProductModel($this->db);
     }
 
+    /**
+     * Menampilkan semua produk
+     * @return array Daftar produk
+     */
     public function showAllProducts()
     {
         try {
-            // Memanggil model untuk mengambil produk
-            return $this->productModel->getAllProducts();  // Memanggil fungsi yang sudah ada di model
+            return $this->productModel->getAllProducts();
         } catch (Exception $e) {
-            error_log("Terjadi kesalahan saat mengambil produk: " . $e->getMessage());
-            return [];  // Kembalikan array kosong jika ada error
+            return [];
         }
     }
 
@@ -45,26 +47,18 @@ class ProductController
 
     public function getProductById($id)
     {
-        try {
-            if (!is_numeric($id) || $id <= 0) {
-                throw new Exception("ID produk tidak valid.");
-            }
+        return $this->productModel->getProductById($id);
+    }
 
-            $query = "SELECT * FROM produk WHERE id_produk = :id";
-            $stmt = $this->db->prepare($query);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-            $product = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if (!$product) {
-                return ["pesan" => "Produk dengan ID tersebut tidak ditemukan."];
-            }
-
-            return $product;
-        } catch (Exception $e) {
-            error_log("Kesalahan saat mengambil produk: " . $e->getMessage());
-            return ["pesan" => "Terjadi kesalahan. Silakan coba lagi nanti."];
-        }
+    /**
+     * Memperbarui stok produk berdasarkan ID
+     * @param int $productId
+     * @param int $newStock
+     * @return bool True jika berhasil, False jika gagal
+     */
+    public function updateStock($productId, $newStock)
+    {
+        return $this->productModel->updateStock($productId, $newStock);
     }
 
 
