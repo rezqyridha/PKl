@@ -4,8 +4,20 @@ require_once __DIR__ . '../../controllers/RestockController.php';
 require_once __DIR__ . '../../controllers/ProductController.php';
 
 session_start();
-
 $action = $_GET['action'] ?? '';
+$redirectUrl = '';
+
+if ($_SESSION['role'] === 'admin') {
+    $redirectUrl = "../views/admin/restock.php";
+} elseif ($_SESSION['role'] === 'karyawan') {
+    $redirectUrl = "../views/employee/restock.php";
+}
+
+// Setelah melakukan tindakan (add/edit/delete)
+header("Location: $redirectUrl");
+exit();
+
+
 $database = new Database();
 $db = $database->getConnection();
 $restockController = new RestockController($db);
