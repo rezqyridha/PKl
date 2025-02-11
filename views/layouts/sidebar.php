@@ -96,12 +96,6 @@ $page = $page ?? ''; // Beri nilai default kosong jika $page belum didefinisikan
             <span>Kelola Pelanggan</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-user-cog"></i>
-            <span>Kelola Pengguna</span>
-        </a>
-    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
