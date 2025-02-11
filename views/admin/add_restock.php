@@ -48,10 +48,19 @@ $suppliers = $supplierController->getAllSuppliers();
                                 <select class="form-control" id="id_produk" name="id_produk" required>
                                     <option value="">-- Pilih Produk --</option>
                                     <?php foreach ($products as $product): ?>
-                                        <option value="<?= $product['id_produk']; ?>"><?= htmlspecialchars($product['nama_produk']); ?></option>
+                                        <option value="<?= $product['id_produk']; ?>"
+                                            data-satuan="<?= htmlspecialchars($product['nama_satuan']); ?>">
+                                            <?= htmlspecialchars($product['nama_produk']); ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
+
+                            <div class="form-group">
+                                <label for="nama_satuan">Satuan</label>
+                                <input type="text" class="form-control" id="nama_satuan" name="nama_satuan" readonly>
+                            </div>
+
 
                             <div class="form-group">
                                 <label for="id_supplier">Supplier</label>
@@ -77,7 +86,7 @@ $suppliers = $supplierController->getAllSuppliers();
 
                             <!-- Jumlah Ditambahkan -->
                             <div class="form-group">
-                                <label for="jumlah_ditambahkan">Jumlah Ditambahkan</label>
+                                <label for="jumlah_ditambahkan">Jumlah Ditambahkan (Botol)</label>
                                 <input type="number" class="form-control" id="jumlah_ditambahkan" name="jumlah_ditambahkan" required>
                             </div>
 
@@ -103,7 +112,10 @@ $suppliers = $supplierController->getAllSuppliers();
         const hargaPerUnitInput = document.getElementById('harga_per_unit');
         const jumlahDitambahkanInput = document.getElementById('jumlah_ditambahkan');
         const totalBiayaDisplay = document.getElementById('total_biaya_display');
+        const selectProduct = document.getElementById('id_produk');
+        const inputSatuan = document.getElementById('nama_satuan'); // Elemen input untuk satuan produk
 
+        // Fungsi untuk menghitung total biaya
         function calculateTotalBiaya() {
             const hargaPerUnit = parseFloat(hargaPerUnitInput.value) || 0;
             const jumlahDitambahkan = parseInt(jumlahDitambahkanInput.value) || 0;
@@ -112,7 +124,24 @@ $suppliers = $supplierController->getAllSuppliers();
             totalBiayaDisplay.value = `Rp ${totalBiaya.toLocaleString('id-ID')}`;
         }
 
+        // Fungsi untuk mengupdate nama satuan produk
+        function updateSatuan() {
+            const selectedOption = selectProduct.options[selectProduct.selectedIndex];
+            const satuan = selectedOption.getAttribute('data-satuan');
+            inputSatuan.value = satuan || ''; // Isi input dengan satuan atau kosongkan jika tidak ada
+        }
+
+        // Event listener untuk menghitung total biaya saat input berubah
         hargaPerUnitInput.addEventListener('input', calculateTotalBiaya);
         jumlahDitambahkanInput.addEventListener('input', calculateTotalBiaya);
+
+        // Event listener untuk mengupdate satuan saat produk dipilih
+        selectProduct.addEventListener('change', function() {
+            updateSatuan();
+            calculateTotalBiaya(); // Recalculate total biaya setiap kali produk berubah
+        });
+
+        // Update satuan saat halaman dimuat pertama kali
+        updateSatuan();
     });
 </script>

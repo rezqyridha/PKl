@@ -60,9 +60,9 @@ elseif ($action == 'edit') {
     $category = $_POST['category'] ?? '';
     $satuan = $_POST['satuan'] ?? '';
     $price = $_POST['price'] ?? '';
-    $stock = $_POST['stock'] ?? '';
+    $stock = $_POST['stock'] ?? ''; // Pastikan stok selalu diambil sebagai input
 
-    if (!empty($name) && !empty($description) && !empty($category) && !empty($satuan) && !empty($price) && !empty($stock)) {
+    if (!empty($name) && !empty($description) && !empty($category) && !empty($satuan) && !empty($price)) {
         $data = [
             'name' => $name,
             'description' => $description,
@@ -72,9 +72,9 @@ elseif ($action == 'edit') {
             'stock' => $stock,
         ];
 
-        $result = $productController->editProduct($productId, $data);
+        $result = $productController->updateProduct($productId, $data);
 
-        $_SESSION['alert'] = $result ? 'updated' : 'no_change';
+        $_SESSION['alert'] = $result ? 'updated' : 'update_failed';
         header("Location: ../views/admin/products.php");
         exit();
     } else {

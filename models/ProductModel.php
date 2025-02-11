@@ -122,29 +122,34 @@ class ProductModel
     {
         try {
             $query = "UPDATE produk 
-                  SET nama_produk = :name, deskripsi = :description, id_kategori = :category, 
-                      id_satuan = :satuan, harga = :price, stok = :stock 
-                  WHERE id_produk = :id";
+                      SET nama_produk = :name, deskripsi = :description, id_kategori = :category, 
+                          id_satuan = :satuan, harga = :price, stok = :stock 
+                      WHERE id_produk = :id";
             $stmt = $this->db->prepare($query);
 
-            // Jika stok kosong (''), set NULL
-            $stock = ($data['stock'] === '' || is_null($data['stock'])) ? null : (int)$data['stock'];
+            // Pastikan stock adalah angka, jika kosong ubah menjadi 0
+            $data['stock'] = ($data['stock'] === '' || is_null($data['stock'])) ? 0 : (int)$data['stock'];
 
             $stmt->bindParam(':name', $data['name']);
             $stmt->bindParam(':description', $data['description']);
             $stmt->bindParam(':category', $data['category'], PDO::PARAM_INT);
             $stmt->bindParam(':satuan', $data['satuan'], PDO::PARAM_INT);
             $stmt->bindParam(':price', $data['price']);
-            $stmt->bindParam(':stock', $stock, PDO::PARAM_INT);
+            $stmt->bindParam(':stock', $data['stock'], PDO::PARAM_INT);
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-            return $stmt->execute();
+            if ($stmt->execute()) {
+                return true;
+            } else {
+                $errorInfo = $stmt->errorInfo();
+                error_log("Gagal memperbarui produk: " . json_encode($errorInfo));
+                return false;
+            }
         } catch (PDOException $e) {
             error_log("Kesalahan saat memperbarui produk ID $id: " . $e->getMessage());
             return false;
         }
     }
-
 
     /**
      * Menghapus produk berdasarkan ID

@@ -1,19 +1,21 @@
 <?php
-
 require_once __DIR__ . '/../models/SalesModel.php';
+require_once __DIR__ . '/../controllers/ProductController.php';
 
 class SalesController
 {
     private $db;
     private $salesModel;
+    private $productController;
 
     public function __construct($db)
     {
         $this->db = $db;
         $this->salesModel = new SalesModel($this->db);
+        $this->productController = new ProductController($this->db); // Pastikan ProductController diinisialisasi
     }
 
-    // Menampilkan semua penjualan
+    // Menampilkan semua data penjualan
     public function showAllSales()
     {
         try {
@@ -24,40 +26,37 @@ class SalesController
         }
     }
 
-    // Mengambil data penjualan berdasarkan ID dengan logika yang lebih optimal
+    // Mengambil data penjualan berdasarkan ID
     public function getSaleById($id)
     {
         try {
             if (!is_numeric($id) || $id <= 0) {
                 throw new Exception("ID penjualan tidak valid.");
             }
-
-            $sale = $this->salesModel->getSaleById($id);
-
-            if ($sale) {
-                return $sale; // Penjualan ditemukan, kembalikan data
-            } else {
-                error_log("Penjualan dengan ID $id tidak ditemukan.");
-                return null;
-            }
+            return $this->salesModel->getSaleById($id);
         } catch (Exception $e) {
             error_log("Kesalahan saat mengambil data penjualan ID $id: " . $e->getMessage());
             return null;
         }
     }
 
-    // Menambahkan penjualan baru
+    // Mengurangi stok saat penjualan ditambahkan
     public function addSale($data)
     {
         try {
-            return $this->salesModel->addSale($data);
+            if ($this->salesModel->addSale($data)) {
+                $this->updateProductStock($data['id_produk'], -$data['jumlah_terjual']);
+                return true;
+            }
+            return false;
         } catch (Exception $e) {
             error_log("Kesalahan saat menambahkan penjualan: " . $e->getMessage());
             return false;
         }
     }
 
-    // Mengedit data penjualan
+
+    // Mengedit data penjualan dan menyesuaikan stok produk
     public function updateSales($id, $data)
     {
         try {
@@ -66,15 +65,12 @@ class SalesController
                 throw new Exception("Data penjualan tidak ditemukan.");
             }
 
-            // Cek apakah data yang diupdate sama persis
-            if (
-                $currentSale['id_produk'] == $data['id_produk'] &&
-                $currentSale['id_pelanggan'] == $data['id_pelanggan'] &&
-                $currentSale['tanggal_penjualan'] == $data['tanggal_penjualan'] &&
-                $currentSale['jumlah_terjual'] == $data['jumlah_terjual'] &&
-                $currentSale['total_harga'] == $data['total_harga']
-            ) {
-                return 'no_change'; // Tidak ada perubahan
+            $oldQuantity = $currentSale['jumlah_terjual'];
+            $newQuantity = intval($data['jumlah_terjual']);
+            $quantityDifference = $newQuantity - $oldQuantity;
+
+            if ($quantityDifference !== 0) {
+                $this->updateProductStock($data['id_produk'], -$quantityDifference);
             }
 
             return $this->salesModel->updateSale($id, $data) ? 'success' : 'failed';
@@ -85,7 +81,10 @@ class SalesController
     }
 
 
-    // Menghapus data penjualan dan mengembalikan stok
+
+
+
+    // Menghapus data penjualan dan mengembalikan stok produk
     public function deleteSaleWithStockRestore($id)
     {
         try {
@@ -93,68 +92,42 @@ class SalesController
                 throw new Exception("ID penjualan tidak valid.");
             }
 
-            // Ambil data penjualan sebelum dihapus
             $sale = $this->getSaleById($id);
-            if (!$sale) {
+            if ($sale) {
+                $this->updateProductStock($sale['id_produk'], $sale['jumlah_terjual']); // Kembalikan stok
+                error_log("Stok produk ID {$sale['id_produk']} berhasil dikembalikan sebanyak {$sale['jumlah_terjual']}.");
+                return $this->salesModel->deleteSale($id);
+            } else {
                 error_log("Penjualan dengan ID $id tidak ditemukan.");
                 return false;
             }
-
-            // Kembalikan stok produk sesuai dengan jumlah yang terjual
-            $productId = $sale['id_produk'];
-            $quantitySold = $sale['jumlah_terjual'];
-
-            // Ambil data produk
-            $productController = new ProductController($this->db);
-            $product = $productController->getProductById($productId);
-
-            if ($product) {
-                $newStock = $product['stok'] + $quantitySold;
-                $productController->updateStock($productId, $newStock);
-                error_log("Stok produk ID $productId berhasil dikembalikan menjadi $newStock.");
-            } else {
-                error_log("Produk dengan ID $productId tidak ditemukan. Tidak bisa mengembalikan stok.");
-            }
-
-            // Hapus data penjualan
-            return $this->salesModel->deleteSale($id);
         } catch (Exception $e) {
-            error_log("Kesalahan saat menghapus penjualan ID $id: " . $e->getMessage());
+            error_log("Kesalahan saat menghapus penjualan: " . $e->getMessage());
             return false;
         }
     }
 
-    // Handler untuk menambahkan penjualan melalui form
-    public function handleAddSale()
+    // ==========================
+    // Fungsi Pembaruan Stok Produk
+    // ==========================
+    private function updateProductStock($productId, $quantityChange)
     {
-        $id_produk = $_POST['id_produk'] ?? '';
-        $id_pelanggan = $_POST['id_pelanggan'] ?? '';
-        $tanggal_penjualan = $_POST['tanggal_penjualan'] ?? '';
-        $jumlah_terjual = $_POST['jumlah_terjual'] ?? '';
-        $total_harga = $_POST['total_harga'] ?? '';
-
-        if (!empty($id_produk) && !empty($id_pelanggan) && !empty($tanggal_penjualan) && !empty($jumlah_terjual) && !empty($total_harga)) {
-            $data = [
-                'id_produk' => $id_produk,
-                'id_pelanggan' => $id_pelanggan,
-                'tanggal_penjualan' => $tanggal_penjualan,
-                'jumlah_terjual' => $jumlah_terjual,
-                'total_harga' => $total_harga
-            ];
-
-            if ($this->addSale($data)) {
-                $_SESSION['alert'] = 'added';
-                header("Location: ../views/admin/sales.php");
-                exit();
-            } else {
-                $_SESSION['alert'] = 'add_failed';
-                header("Location: ../views/admin/sales.php");
-                exit();
-            }
-        } else {
-            $_SESSION['alert'] = 'invalid_input';
-            header("Location: ../views/admin/sales.php");
-            exit();
+        $product = $this->productController->getProductById($productId);
+        if ($product) {
+            $newStock = max(0, $product['stok'] + $quantityChange);
+            $this->productController->updateStock($productId, $newStock);
+            error_log("Stok produk ID $productId diperbarui menjadi: $newStock.");
         }
+    }
+
+
+    // ==========================
+    // Validasi Data Penjualan
+    // ==========================
+    private function validateSaleData($data)
+    {
+        return isset($data['id_produk'], $data['tanggal_penjualan'], $data['jumlah_terjual'], $data['total_harga']) &&
+            is_numeric($data['jumlah_terjual']) && $data['jumlah_terjual'] > 0 &&
+            is_numeric($data['total_harga']) && $data['total_harga'] > 0;
     }
 }

@@ -21,46 +21,30 @@ $sales = $salesController->showAllSales();
 // Menampilkan SweetAlert berdasarkan session alert
 if (isset($_SESSION['alert'])) {
     echo "<script>
-        document.addEventListener('DOMContentLoaded', function () {";
+        document.addEventListener('DOMContentLoaded', function () {
+            let sessionAlert = " . json_encode($_SESSION['alert']) . ";
+            console.log('Session alert:', sessionAlert);
 
-    switch ($_SESSION['alert']) {
-        case 'added':
-            echo "Swal.fire({ title: 'Berhasil!', text: 'Penjualan berhasil ditambahkan!', icon: 'success' });";
-            break;
-        case 'updated':
-            echo "Swal.fire({ title: 'Berhasil!', text: 'Penjualan berhasil diubah!', icon: 'success' });";
-            break;
-        case 'deleted':
-            echo "Swal.fire({ title: 'Terhapus!', text: 'Penjualan berhasil dihapus!', icon: 'success' });";
-            break;
-        case 'no_change':
-            echo "Swal.fire({ title: 'Tidak Ada Perubahan!', text: 'Data yang Anda masukkan sama dengan yang sudah ada.',
-                icon: 'info' });";
-            break;
-        case 'insufficient_stock':
-            echo "Swal.fire({ title: 'Gagal!', text: 'Stok tidak mencukupi untuk penjualan ini.', icon: 'error' });";
-            break;
-        case 'add_failed':
-            echo "Swal.fire({ title: 'Gagal!', text: 'Gagal menambahkan penjualan!', icon: 'error' });";
-            break;
-        case 'update_failed':
-            echo "Swal.fire({ title: 'Gagal!', text: 'Gagal memperbarui penjualan!', icon: 'error' });";
-            break;
-        case 'delete_failed':
-            echo "Swal.fire({ title: 'Gagal!', text: 'Gagal menghapus penjualan!', icon: 'error' });";
-            break;
-        case 'validation_error':
-            echo "Swal.fire({ title: 'Gagal!', text: 'Data penjualan tidak valid!', icon: 'error' });";
-            break;
-        default:
-            echo "Swal.fire({ title: 'Peringatan!', text: 'Aksi tidak valid!', icon: 'warning' });";
-            break;
-    }
-
-    echo "});</script>";
-
-    unset($_SESSION['alert']); // Hapus session alert setelah ditampilkan
+            switch (sessionAlert) {
+                case 'added':
+                    Swal.fire({ title: 'Berhasil!', text: 'Penjualan berhasil ditambahkan! Stok telah diperbarui.', icon: 'success' });
+                    break;
+                case 'updated':
+                    Swal.fire({ title: 'Berhasil!', text: 'Penjualan berhasil diubah!', icon: 'success' });
+                    break;
+                case 'deleted':
+                    Swal.fire({ title: 'Terhapus!', text: 'Penjualan berhasil dihapus! Stok telah dikembalikan.', icon: 'success' });
+                    break;
+                default:
+                    Swal.fire({ title: 'Peringatan!', text: 'Aksi tidak valid!', icon: 'warning' });
+                    break;
+            }
+        });
+    </script>";
+    unset($_SESSION['alert']);
 }
+
+
 
 ?>
 
@@ -97,6 +81,7 @@ if (isset($_SESSION['alert'])) {
                                     <tr>
                                         <th>No</th>
                                         <th>Produk</th>
+                                        <th>Satuan</th>
                                         <th>Pelanggan</th>
                                         <th>Tanggal Penjualan</th>
                                         <th>Jumlah Terjual</th>
@@ -111,13 +96,14 @@ if (isset($_SESSION['alert'])) {
                                             <tr>
                                                 <td><?= $no++; ?></td>
                                                 <td><?= htmlspecialchars($sale['nama_produk']); ?></td>
+                                                <td><?= htmlspecialchars($sale['nama_satuan']); ?></td> <!-- Menampilkan satuan produk -->
                                                 <td><?= htmlspecialchars($sale['nama_pelanggan']); ?></td>
                                                 <td><?php
                                                     $tanggal = DateTime::createFromFormat('Y-m-d', $sale['tanggal_penjualan']);
                                                     echo $tanggal ? $tanggal->format('d-m-Y') : '-';
                                                     ?>
                                                 </td>
-                                                <td><?= htmlspecialchars($sale['jumlah_terjual'] ?? '0'); ?> unit</td>
+                                                <td><?= htmlspecialchars($sale['jumlah_terjual'] ?? '0'); ?> Botol</td>
                                                 <td>Rp <?= number_format((float) ($sale['total_harga'] ?? 0), 0, ',', '.'); ?></td>
                                                 <td>
                                                     <a href="edit_sales.php?id=<?= $sale['id_penjualan']; ?>"
@@ -133,7 +119,7 @@ if (isset($_SESSION['alert'])) {
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="7" class="text-center">Tidak ada penjualan yang tersedia.</td>
+                                            <td colspan="8" class="text-center">Tidak ada penjualan yang tersedia.</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
@@ -167,25 +153,38 @@ if (isset($_SESSION['alert'])) {
                 fetch(`../../controllers/sales_actions.php?action=delete&id=${saleId}`, {
                         method: 'GET'
                     })
-                    .then(response => response.json())
+                    .then(response => response.text()) // Ambil respon sebagai teks
                     .then(data => {
-                        if (data.success) {
-                            Swal.fire({
-                                title: "Berhasil!",
-                                text: "Penjualan telah dihapus.",
-                                icon: "success"
-                            }).then(() => {
-                                location.reload(); // Reload halaman
-                            });
-                        } else {
+                        console.log(data); // Debugging: lihat output mentah
+                        let jsonResponse;
+                        try {
+                            jsonResponse = JSON.parse(data); // Coba parse sebagai JSON
+                        } catch (e) {
                             Swal.fire({
                                 title: "Error!",
-                                text: data.message || "Terjadi kesalahan saat menghapus penjualan.",
+                                text: "Respon dari server bukan JSON yang valid.",
+                                icon: "error"
+                            });
+                            return;
+                        }
+
+                        if (jsonResponse.success) {
+                            Swal.fire({
+                                    title: "Berhasil!",
+                                    text: jsonResponse.message,
+                                    icon: "success"
+                                })
+                                .then(() => location.reload()); // Reload halaman setelah sukses
+                        } else {
+                            Swal.fire({
+                                title: "Gagal!",
+                                text: jsonResponse.message,
                                 icon: "error"
                             });
                         }
                     })
                     .catch(error => {
+                        console.error("Error:", error);
                         Swal.fire({
                             title: "Error!",
                             text: "Terjadi kesalahan dalam komunikasi dengan server.",

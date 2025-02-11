@@ -82,17 +82,17 @@ if (!$restock) {
                                 <input type="datetime-local" class="form-control" id="tanggal_restock" name="tanggal_restock" value="<?= htmlspecialchars($restock['tanggal_restock'] ?? ''); ?>" required>
                             </div>
 
+
+                            <div class="form-group">
+                                <label for="harga_per_unit">Harga per Unit (Rp)</label>
+                                <input type="text" class="form-control" id="harga_per_unit" name="harga_per_unit"
+                                    value="<?= number_format($restock['harga_per_unit'], 0, '', '.'); ?>" required>
+                            </div>
+
                             <div class="form-group">
                                 <label for="jumlah_ditambahkan">Jumlah Ditambahkan</label>
                                 <input type="number" class="form-control" id="jumlah_ditambahkan" name="jumlah_ditambahkan" value="<?= htmlspecialchars($restock['jumlah_ditambahkan'] ?? '0'); ?>" required>
                             </div>
-
-                            <div class="form-group">
-                                <label for="harga_per_unit">Harga per Unit (Rp)</label>
-                                <input type="number" class="form-control" id="harga_per_unit" name="harga_per_unit"
-                                    value="<?= htmlspecialchars($restock['harga_per_unit']); ?>" required>
-                            </div>
-
 
                             <div class="form-group">
                                 <label for="total_biaya">Total Biaya (Rp)</label>
@@ -114,20 +114,40 @@ if (!$restock) {
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const jumlahInput = document.getElementById('jumlah_ditambahkan');
-        const hargaInput = document.getElementById('harga_beli');
+        const hargaInput = document.getElementById('harga_per_unit');
         const totalInput = document.getElementById('total_biaya');
         const totalDisplay = document.getElementById('total_biaya_display');
 
-        function calculateTotal() {
-            const jumlah = parseInt(jumlahInput.value) || 0;
-            const harga = parseFloat(hargaInput.value) || 0;
-            const total = jumlah * harga;
-
-            totalInput.value = total;
-            totalDisplay.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+        // Fungsi format angka
+        function formatNumber(value) {
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
-        jumlahInput.addEventListener('input', calculateTotal);
-        hargaInput.addEventListener('input', calculateTotal);
+        // Hapus format angka
+        function unformatNumber(value) {
+            return value.replace(/\./g, '');
+        }
+
+        // Kalkulasi total biaya
+        function calculateTotal() {
+            const jumlah = parseInt(unformatNumber(jumlahInput.value)) || 0;
+            const harga = parseInt(unformatNumber(hargaInput.value)) || 0;
+            const total = jumlah * harga;
+
+            totalInput.value = total; // Simpan nilai total biaya
+            totalDisplay.textContent = `Rp ${formatNumber(total)}`; // Tampilkan dalam format rupiah
+        }
+
+        // Event Listener untuk memformat input jumlah
+        jumlahInput.addEventListener('input', function() {
+            jumlahInput.value = formatNumber(unformatNumber(jumlahInput.value));
+            calculateTotal();
+        });
+
+        // Event Listener untuk memformat input harga
+        hargaInput.addEventListener('input', function() {
+            hargaInput.value = formatNumber(unformatNumber(hargaInput.value));
+            calculateTotal();
+        });
     });
 </script>

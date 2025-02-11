@@ -159,10 +159,9 @@ if (isset($_SESSION['alert'])) {
                                                     echo htmlspecialchars($satuanName);
                                                     ?>
                                                 </td>
-
                                                 <!-- Menampilkan harga produk -->
-                                                <td>Rp <?= number_format($product['harga']); ?></td>
-                                                <td><?= ($product['stok'] === null || $product['stok'] === 0) ? '0' : htmlspecialchars($product['stok']); ?></td>
+                                                <td>Rp <?= number_format($product['harga'] ?? 0, 0, ',', '.'); ?></td>
+                                                <td><?= ($product['stok'] === null || $product['stok'] === 0) ? '0' : htmlspecialchars($product['stok']); ?> Botol</td>
                                                 <td>
                                                     <a href="edit_product.php?id=<?= $product['id_produk']; ?>"
                                                         class="btn btn-info btn-circle">

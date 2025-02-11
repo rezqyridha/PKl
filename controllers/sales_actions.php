@@ -3,119 +3,119 @@ require_once '../config/database.php';
 require_once 'SalesController.php';
 require_once 'ProductController.php';
 
-session_start(); // Pastikan session dimulai
-
+session_start();
 $action = $_GET['action'] ?? '';
+$role = $_SESSION['role'] ?? '';
 
 $database = new Database();
 $db = $database->getConnection();
 $salesController = new SalesController($db);
 $productController = new ProductController($db);
 
-if ($action == 'add') {
-    $data = sanitizeInput($_POST);
-    $productId = $data['id_produk'] ?? 0;
-    $quantitySold = $data['jumlah_terjual'] ?? 0;
+try {
+    ob_start();  // Mulai buffer output
+    switch ($action) {
+        case 'add':
+            handleAddSale($salesController, $productController, $role);
+            $redirectUrl = ($role === 'karyawan') ? '../views/employee/sales.php' : '../views/admin/sales.php';
+            header("Location: $redirectUrl");
+            exit();
+        case 'edit':
+            handleEditSale($salesController, $productController);
+            $redirectUrl = ($role === 'karyawan') ? '../views/employee/sales.php' : '../views/admin/sales.php';
+            header("Location: $redirectUrl");
+            exit();
+        case 'delete':
+            handleDeleteSale($salesController);
+            break;  // Tidak ada header, karena delete mengembalikan JSON
+        default:
+            echo json_encode(['success' => false, 'message' => 'Aksi tidak valid.']);
+    }
+    ob_end_flush();  // Kirim output setelah diproses
+} catch (Exception $e) {
+    ob_end_clean();  // Hapus output jika ada kesalahan
+    echo json_encode(['success' => false, 'message' => 'Terjadi kesalahan pada server.', 'error' => $e->getMessage()]);
+}
 
-    if ($productId && $quantitySold > 0) {
+// ==============================
+// Fungsi Handler
+// ==============================
+
+function handleAddSale($salesController, $productController, $role)
+{
+    $data = sanitizeInput($_POST);
+    $productId = intval($data['id_produk'] ?? 0);
+    $quantitySold = intval($data['jumlah_terjual'] ?? 0);
+
+    if ($productId > 0 && $quantitySold > 0) {
         $product = $productController->getProductById($productId);
 
         if ($product && $product['stok'] >= $quantitySold) {
-            // Kurangi stok produk
-            $newStock = $product['stok'] - $quantitySold;
-            $productController->updateStock($productId, $newStock);
-
-            // Tambahkan penjualan
             $result = $salesController->addSale($data);
-            $_SESSION['alert'] = $result ? 'added' : 'add_failed';
+            if ($result) {
+                // Kurangi stok produk setelah berhasil menambah penjualan
+                $newStock = $product['stok'] - $quantitySold;
+                $productController->updateStock($productId, $newStock);
+                $_SESSION['alert'] = 'added';
+            } else {
+                $_SESSION['alert'] = 'add_failed';
+            }
         } else {
-            $_SESSION['alert'] = 'insufficient_stock'; // Stok tidak mencukupi
+            $_SESSION['alert'] = 'insufficient_stock';
         }
-    } else {
-        $_SESSION['alert'] = 'invalid_input';
-    }
-
-    header("Location: ../views/admin/sales.php");
-    exit();
-} elseif ($action == 'edit') {
-    $id = intval($_GET['id'] ?? 0);
-
-    if ($id == 0) {
-        $_SESSION['alert'] = 'invalid_id';
-        header("Location: ../views/admin/sales.php");
-        exit();
-    }
-
-    $data = sanitizeInput($_POST);
-
-    if (validateSaleData($data)) {
-        $result = $salesController->updateSales($id, $data);
-        $_SESSION['alert'] = ($result === 'success') ? 'updated' : (($result === 'no_change') ? 'no_change' : 'update_failed');
     } else {
         $_SESSION['alert'] = 'validation_error';
     }
-    header("Location: ../views/admin/sales.php");
-    exit();
-} elseif ($action == 'delete') {
+    error_log("Session alert set to: " . $_SESSION['alert']);
+}
+
+function handleEditSale($salesController, $productController)
+{
+    $id = intval($_GET['id'] ?? 0);
+    $data = sanitizeInput($_POST);
+
+    if ($id === 0 || !validateSaleData($data)) {
+        $_SESSION['alert'] = 'validation_error';
+        return;
+    }
+
+    $result = $salesController->updateSales($id, $data);
+    $_SESSION['alert'] = ($result === 'success') ? 'updated' : 'update_failed';
+}
+
+function handleDeleteSale($salesController)
+{
+    header('Content-Type: application/json');
+    ob_start();  // Buffer untuk menghindari output tambahan
+
     $id = intval($_GET['id'] ?? 0);
 
-    if ($id == 0) {
-        $_SESSION['alert'] = 'invalid_id';
-        header("Location: ../views/admin/sales.php");
-        exit();
+    if ($id === 0) {
+        ob_end_clean();
+        echo json_encode(['success' => false, 'message' => 'ID tidak valid.']);
+        return;
     }
 
-    // Ambil data penjualan sebelum dihapus
-    $sale = $salesController->getSaleById($id);
+    $result = $salesController->deleteSaleWithStockRestore($id);
 
-    if ($sale) {
-        $productId = $sale['id_produk'];
-        $quantitySold = $sale['jumlah_terjual'];
-
-        // Tambahkan kembali jumlah terjual ke stok produk
-        $product = $productController->getProductById($productId);
-        if ($product) {
-            $newStock = $product['stok'] + $quantitySold;
-            $productController->updateStock($productId, $newStock);
-            error_log("Stok produk ID $productId dikembalikan menjadi $newStock.");
-        }
-
-        // Hapus penjualan
-        $result = $salesController->deleteSaleWithStockRestore($id);
-        $_SESSION['alert'] = $result ? 'deleted' : 'delete_failed';
+    ob_end_clean();
+    if ($result) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Data berhasil dihapus. Stok produk telah dikembalikan ke jumlah sebelum penjualan.'
+        ]);
     } else {
-        $_SESSION['alert'] = 'not_found';
+        echo json_encode([
+            'success' => false,
+            'message' => 'Gagal menghapus data. Stok produk tidak berubah.'
+        ]);
     }
-    header("Location: ../views/admin/sales.php");
-    exit();
-} else {
-    $_SESSION['alert'] = 'invalid_action';
-    header("Location: ../views/admin/sales.php");
-    exit();
 }
 
-// Fungsi Validasi Data Penjualan
-function validateSaleData($data)
-{
-    if (
-        empty($data['id_produk']) || empty($data['id_pelanggan']) || empty($data['tanggal_penjualan']) ||
-        empty($data['jumlah_terjual']) || empty($data['total_harga'])
-    ) {
-        return false;
-    }
+// ==============================
+// Fungsi Helper
+// ==============================
 
-    if (!is_numeric($data['jumlah_terjual']) || $data['jumlah_terjual'] <= 0) {
-        return false;
-    }
-
-    if (!is_numeric($data['total_harga']) || $data['total_harga'] <= 0) {
-        return false;
-    }
-
-    return true;
-}
-
-// Fungsi Sanitasi Input
 function sanitizeInput($data)
 {
     $sanitizedData = [];
@@ -123,4 +123,11 @@ function sanitizeInput($data)
         $sanitizedData[$key] = htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
     }
     return $sanitizedData;
+}
+
+function validateSaleData($data)
+{
+    return !empty($data['id_produk']) && !empty($data['id_pelanggan']) && !empty($data['tanggal_penjualan']) &&
+        !empty($data['jumlah_terjual']) && !empty($data['total_harga']) &&
+        is_numeric($data['jumlah_terjual']) && is_numeric($data['total_harga']);
 }

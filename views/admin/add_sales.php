@@ -51,11 +51,19 @@ $customers = $customerController->getAllCustomers();
                                 <select class="form-control" id="id_produk" name="id_produk" required>
                                     <option value="">-- Pilih Produk --</option>
                                     <?php foreach ($products as $product): ?>
-                                        <option value="<?= htmlspecialchars($product['id_produk']); ?>" data-price="<?= $product['harga']; ?>">
+                                        <option value="<?= htmlspecialchars($product['id_produk']); ?>"
+                                            data-price="<?= $product['harga']; ?>"
+                                            data-satuan="<?= htmlspecialchars($product['nama_satuan']); ?>">
                                             <?= htmlspecialchars($product['nama_produk']); ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
+                            </div>
+
+                            <!-- Satuan Produk (Readonly) -->
+                            <div class="form-group">
+                                <label for="nama_satuan">Satuan</label>
+                                <input type="text" class="form-control" id="nama_satuan" name="nama_satuan" readonly>
                             </div>
 
                             <!-- Pelanggan -->
@@ -79,21 +87,20 @@ $customers = $customerController->getAllCustomers();
 
                             <!-- Jumlah Terjual -->
                             <div class="form-group">
-                                <label for="jumlah_terjual">Jumlah Terjual</label>
+                                <label for="jumlah_terjual">Jumlah Terjual (Botol)</label>
                                 <input type="number" class="form-control" id="jumlah_terjual" name="jumlah_terjual" placeholder="Masukkan jumlah terjual" required>
                             </div>
 
                             <!-- Total Harga -->
                             <div class="form-group">
                                 <label for="total_harga">Total Harga (Rp)</label>
-                                <!-- Input hidden untuk menyimpan nilai numerik -->
                                 <input type="hidden" id="total_harga" name="total_harga">
-                                <!-- Span untuk menampilkan total harga yang diformat -->
                                 <span id="total_harga_display" class="form-control bg-light" readonly></span>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Simpan Penjualan</button>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -105,35 +112,40 @@ $customers = $customerController->getAllCustomers();
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const selectProduct = document.getElementById('id_produk');
+        const inputSatuan = document.getElementById('nama_satuan');
         const inputJumlahTerjual = document.getElementById('jumlah_terjual');
         const inputTotalHarga = document.getElementById('total_harga');
         const displayTotalHarga = document.getElementById('total_harga_display');
 
         function formatRupiah(angka) {
-            const formatted = new Intl.NumberFormat('id-ID', {
+            return new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
-                minimumFractionDigits: 0 // Tidak menampilkan angka desimal
+                minimumFractionDigits: 0
             }).format(angka);
-            return formatted;
         }
 
-        function calculateTotal() {
+        function updateForm() {
             const selectedOption = selectProduct.options[selectProduct.selectedIndex];
             const hargaProduk = selectedOption.getAttribute('data-price');
+            const satuanProduk = selectedOption.getAttribute('data-satuan');
             const jumlahTerjual = inputJumlahTerjual.value;
 
+            // Menampilkan satuan produk di input readonly
+            inputSatuan.value = satuanProduk || 'Tidak ada satuan';
+
+            // Menghitung total harga
             if (hargaProduk && jumlahTerjual) {
                 const totalHarga = parseFloat(hargaProduk) * parseInt(jumlahTerjual);
-                inputTotalHarga.value = totalHarga; // Simpan nilai numerik
-                displayTotalHarga.textContent = formatRupiah(totalHarga); // Tampilkan dalam format Rupiah tanpa desimal
+                inputTotalHarga.value = totalHarga;
+                displayTotalHarga.textContent = formatRupiah(totalHarga);
             } else {
                 inputTotalHarga.value = '';
                 displayTotalHarga.textContent = 'Rp 0';
             }
         }
 
-        selectProduct.addEventListener('change', calculateTotal);
-        inputJumlahTerjual.addEventListener('input', calculateTotal);
+        selectProduct.addEventListener('change', updateForm);
+        inputJumlahTerjual.addEventListener('input', updateForm);
     });
 </script>

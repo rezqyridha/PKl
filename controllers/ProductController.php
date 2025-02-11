@@ -108,20 +108,20 @@ class ProductController
      * @param array $data Data produk
      * @return bool True jika berhasil, False jika gagal
      */
-    public function editProduct($id, $data)
+    public function updateProduct($id, $data)
     {
-        // Validasi stok sebelum diteruskan ke model
-        $data['stock'] = ($data['stock'] === '' || is_null($data['stock'])) ? null : (int)$data['stock'];
-
-        $result = $this->productModel->updateProduct($id, $data);
-
-        if ($result) {
-            error_log("Produk ID $id berhasil diperbarui.");
-        } else {
-            error_log("Gagal memperbarui produk ID $id.");
+        try {
+            if ($this->validateProductData($data)) {
+                $result = $this->productModel->updateProduct($id, $data);
+                return $result;
+            } else {
+                error_log("Validasi gagal untuk produk ID $id: " . json_encode($data));
+                return false;
+            }
+        } catch (Exception $e) {
+            error_log("Exception di updateProduct: " . $e->getMessage());
+            return false;
         }
-
-        return $result;
     }
 
     /**
@@ -172,5 +172,11 @@ class ProductController
     public function getAllSatuan()
     {
         return $this->productModel->getAllSatuan();
+    }
+
+    private function validateProductData($data)
+    {
+        return isset($data['name'], $data['description'], $data['category'], $data['satuan'], $data['price']) &&
+            is_numeric($data['price']) && $data['price'] > 0;
     }
 }

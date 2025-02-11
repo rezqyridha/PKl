@@ -26,7 +26,7 @@ if (isset($_SESSION['alert'])) {
 
     $alertMessages = [
         'restock_success' => ['title' => 'Berhasil!', 'text' => 'Restock berhasil ditambahkan dan stok diperbarui.', 'icon' => 'success'],
-        'deleted' => ['title' => 'Terhapus!', 'text' => 'Data restock berhasil dihapus dan stok diperbarui.!', 'icon' => 'success'],
+        'deleted' => ['title' => 'Terhapus!', 'text' => 'Data restock berhasil dihapus dan stok diperbarui.', 'icon' => 'success'],
         'updated' => ['title' => 'Berhasil!', 'text' => 'Data restock berhasil diperbarui!', 'icon' => 'success'],
         'no_change' => ['title' => 'Tidak Ada Perubahan!', 'text' => 'Data yang Anda masukkan sama dengan yang sudah ada.', 'icon' => 'info'],
         'update_failed' => ['title' => 'Gagal!', 'text' => 'Gagal memperbarui data restock!', 'icon' => 'error'],
@@ -71,6 +71,7 @@ if (isset($_SESSION['alert'])) {
                                     <tr>
                                         <th>No</th>
                                         <th>Nama Produk</th>
+                                        <th>Satuan</th>
                                         <th>Supplier</th>
                                         <th>Tanggal Restock</th>
                                         <th>Jumlah Ditambahkan</th>
@@ -86,11 +87,12 @@ if (isset($_SESSION['alert'])) {
                                             <tr>
                                                 <td><?= $no++; ?></td>
                                                 <td><?= htmlspecialchars($restock['nama_produk']); ?></td>
+                                                <td><?= htmlspecialchars($restock['nama_satuan'] ?? '-'); ?></td> <!-- Menampilkan satuan -->
                                                 <td><?= htmlspecialchars($restock['nama']); ?></td>
                                                 <td><?= htmlspecialchars($restock['tanggal_restock']); ?></td>
-                                                <td><?= htmlspecialchars($restock['jumlah_ditambahkan'] ?? '0'); ?></td>
-                                                <td>Rp <?= number_format($restock['harga_per_unit'] ?? 0, 2, ',', '.'); ?></td>
-                                                <td>Rp <?= number_format($restock['total_biaya'] ?? 0, 2, ',', '.'); ?></td>
+                                                <td><?= htmlspecialchars($restock['jumlah_ditambahkan'] ?? '0'); ?> Botol</td>
+                                                <td>Rp <?= number_format($restock['harga_per_unit'] ?? 0, 0, ',', '.'); ?></td>
+                                                <td>Rp <?= number_format($restock['total_biaya'] ?? 0, 0, ',', '.'); ?></td>
                                                 <td>
                                                     <a href="edit_restock.php?id=<?= $restock['id_restock'] ?? 0; ?>" class="btn btn-info btn-circle">
                                                         <i class="fas fa-info-circle"></i>
@@ -103,11 +105,10 @@ if (isset($_SESSION['alert'])) {
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="8" class="text-center">Tidak ada data restock tersedia.</td>
+                                            <td colspan="9" class="text-center">Tidak ada data restock tersedia.</td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
-
                             </table>
                         </div>
                     </div>
