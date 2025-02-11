@@ -24,7 +24,7 @@ if (!empty($username) && !empty($password)) {
 
             // Redirect berdasarkan role
             if ($user['role'] === 'karyawan') {
-                header("Location: ../employee/dashboard.php");
+                header("Location: ../employee/dashboard_karyawan.php");
             } elseif ($user['role'] === 'admin') {
                 header("Location: ../admin/dashboard.php");
             } else {

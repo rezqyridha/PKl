@@ -1,7 +1,11 @@
+<?php
+$base_url = "/madu/views/";
+?>
+
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../employee/dashboard.php">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../employee/dashboard_karyawan.php">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-user-cog"></i>
         </div>
@@ -13,7 +17,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item <?= ($page === 'dashboard') ? 'active' : ''; ?>">
-        <a class="nav-link" href="../employee/dashboard.php">
+        <a class="nav-link" href="../employee/dashboard_karyawan.php">
             <i class="fas fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
@@ -27,7 +31,7 @@
 
     <!-- Nav Item - Produk -->
     <li class="nav-item <?= ($page === 'products') ? 'active' : ''; ?>">
-        <a class="nav-link" href="products.php">
+        <a class="nav-link" href="../employee/products.php">
             <i class="fas fa-cubes"></i>
             <span>Stok Produk</span>
         </a>
@@ -35,7 +39,7 @@
 
     <!-- Nav Item - Restock -->
     <li class="nav-item <?= ($page === 'restock') ? 'active' : ''; ?>">
-        <a class="nav-link" href="restock.php">
+        <a class="nav-link" href="../employee/restock.php">
             <i class="fas fa-boxes"></i>
             <span>Restock Produk</span>
         </a>
@@ -43,7 +47,7 @@
 
     <!-- Manajemen Penjualan -->
     <li class="nav-item <?= ($page == 'sales') ? 'active' : '' ?>">
-        <a class="nav-link" href="sales.php">
+        <a class="nav-link" href="../employee/sales.php">
             <i class="fas fa-shopping-cart"></i>
             <span>Manajemen Penjualan</span>
         </a>
@@ -62,9 +66,9 @@
         <div id="collapseReports" class="collapse" aria-labelledby="headingReports" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Laporan Tersedia:</h6>
-                <a class="collapse-item" href="reports/sales_by_product.php"><i class="fas fa-chart-bar"></i> Penjualan per Produk</a>
-                <a class="collapse-item" href="reports/restock_expenses.php"><i class="fas fa-file-invoice-dollar"></i> Pengeluaran Restock</a>
-                <a class="collapse-item" href="reports/product_stock_report.php"><i class="fas fa-boxes"></i> Stok Produk</a>
+                <a class="collapse-item" href="<?= $base_url ?>reports/sales_by_product.php"><i class="fas fa-chart-bar"></i> Penjualan per Produk</a>
+                <a class="collapse-item" href="<?= $base_url ?>reports/restock_expenses.php"><i class="fas fa-file-invoice-dollar"></i> Pengeluaran Restock</a>
+                <a class="collapse-item" href="<?= $base_url ?>reports/product_stock_report.php"><i class="fas fa-boxes"></i> Stok Produk</a>
             </div>
         </div>
     </li>
