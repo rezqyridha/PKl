@@ -68,7 +68,6 @@ $satuan = $productController->getAllSatuan();
                                         <th>Satuan</th>
                                         <th>Harga</th>
                                         <th>Stok</th>
-                                        <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -104,12 +103,7 @@ $satuan = $productController->getAllSatuan();
                                                     ?>
                                                 </td>
                                                 <td>Rp <?= number_format($product['harga']); ?></td>
-                                                <td><?= ($product['stok'] === null || $product['stok'] === 0) ? '0' : htmlspecialchars($product['stok']); ?></td>
-                                                <td>
-                                                    <a href="edit_product.php?id=<?= $product['id_produk']; ?>" class="btn btn-warning btn-circle">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                </td>
+                                                <td><?= ($product['stok'] === null || $product['stok'] === 0) ? '0' : htmlspecialchars($product['stok']); ?> Botol</td>
                                             </tr>
                                         <?php endforeach; ?>
                                     <?php else: ?>

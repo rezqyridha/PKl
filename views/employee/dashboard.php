@@ -62,7 +62,7 @@ $totalRestockToday = $restockController->getTotalRestockToday();
 
                     <!-- Total Stok -->
                     <div class="col-xl-4 col-md-6 mb-4">
-                        <div class="card dashboard-widget border-left-primary shadow h-100 py-2">
+                        <div class="card dashboard-widget border-left-primary shadow h-100 py-2" data-target="products.php">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
@@ -70,7 +70,7 @@ $totalRestockToday = $restockController->getTotalRestockToday();
                                             Total Stok Produk
                                         </div>
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                            <?= number_format($totalStock); ?> Pcs
+                                            <?= number_format($totalStock); ?> Botol
                                         </div>
                                     </div>
                                     <div class="col-auto">
@@ -83,7 +83,7 @@ $totalRestockToday = $restockController->getTotalRestockToday();
 
                     <!-- Produk Hampir Habis -->
                     <div class="col-xl-4 col-md-6 mb-4">
-                        <div class="card dashboard-widget border-left-danger shadow h-100 py-2" data-target="low_stock_products.php">
+                        <div class="card dashboard-widget border-left-danger shadow h-100 py-2" data-target="lowstok.php">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
@@ -104,7 +104,7 @@ $totalRestockToday = $restockController->getTotalRestockToday();
 
                     <!-- Total Restock Hari Ini -->
                     <div class="col-xl-4 col-md-6 mb-4">
-                        <div class="card dashboard-widget border-left-success shadow h-100 py-2">
+                        <div class="card dashboard-widget border-left-success shadow h-100 py-2" data-target="restock.php">
                             <div class="card-body">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
@@ -138,3 +138,16 @@ $totalRestockToday = $restockController->getTotalRestockToday();
     <!-- End of Content Wrapper -->
 
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".dashboard-widget").forEach(widget => {
+            widget.addEventListener("click", function() {
+                let target = this.getAttribute("data-target");
+                if (target) {
+                    window.location.href = target;
+                }
+            });
+        });
+    });
+</script>

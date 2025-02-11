@@ -39,6 +39,7 @@ $lowStockProducts = $productModel->getLowStockProducts();
                 <tr>
                     <th>No</th>
                     <th>Nama Produk</th>
+                    <th>Satuan</th>
                     <th>Stok</th>
                 </tr>
             </thead>
@@ -48,6 +49,7 @@ $lowStockProducts = $productModel->getLowStockProducts();
                         <tr>
                             <td><?= $index + 1; ?></td>
                             <td><?= htmlspecialchars($product['nama_produk']); ?></td>
+                            <td><?= htmlspecialchars($product['nama_satuan']); ?></td>
                             <td class="text-danger font-weight-bold"><?= $product['stok']; ?></td>
                         </tr>
                     <?php endforeach; ?>

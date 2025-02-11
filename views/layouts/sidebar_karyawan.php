@@ -1,7 +1,7 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard_karyawan.php">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../employee/dashboard.php">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-user-cog"></i>
         </div>
@@ -41,26 +41,32 @@
         </a>
     </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
-
-    <!-- Heading -->
-    <div class="sidebar-heading">Laporan</div>
-
-    <!-- Nav Item - Laporan Produk -->
-    <li class="nav-item <?= ($page === 'report_stock') ? 'active' : ''; ?>">
-        <a class="nav-link" href="report_stock.php">
-            <i class="fas fa-file-alt"></i>
-            <span>Laporan Stok Produk</span>
+    <!-- Manajemen Penjualan -->
+    <li class="nav-item <?= ($page == 'sales') ? 'active' : '' ?>">
+        <a class="nav-link" href="sales.php">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Manajemen Penjualan</span>
         </a>
     </li>
 
-    <!-- Nav Item - Laporan Restock -->
-    <li class="nav-item <?= ($page === 'report_restock') ? 'active' : ''; ?>">
-        <a class="nav-link" href="report_restock.php">
-            <i class="fas fa-chart-bar"></i>
-            <span>Laporan Restock</span>
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Laporan -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReports"
+            aria-expanded="true" aria-controls="collapseReports">
+            <i class="fas fa-chart-line"></i>
+            <span>Laporan</span>
         </a>
+        <div id="collapseReports" class="collapse" aria-labelledby="headingReports" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <h6 class="collapse-header">Laporan Tersedia:</h6>
+                <a class="collapse-item" href="reports/sales_by_product.php"><i class="fas fa-chart-bar"></i> Penjualan per Produk</a>
+                <a class="collapse-item" href="reports/restock_expenses.php"><i class="fas fa-file-invoice-dollar"></i> Pengeluaran Restock</a>
+                <a class="collapse-item" href="reports/product_stock_report.php"><i class="fas fa-boxes"></i> Stok Produk</a>
+            </div>
+        </div>
     </li>
 
     <!-- Divider -->

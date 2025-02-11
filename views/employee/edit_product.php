@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Validasi berhasil, lakukan update stok
         $result = $productController->updateStock($id_produk, $newStock);
 
-        $_SESSION['alert'] = $result ? 'stock_updated' : 'update_failed';
+        $_SESSION['alert'] = $result ? 'Stok diperbarui' : 'update_failed';
     } else {
         $_SESSION['alert'] = 'invalid_stock';
     }

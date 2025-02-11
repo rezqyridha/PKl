@@ -105,19 +105,19 @@ echo "<!-- Current Page: $page -->"; // Debugging
         <div id="collapseReports" class="collapse" aria-labelledby="headingReports" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Laporan Analisis:</h6>
-                <a class="collapse-item" href="../admin/reports/sales_by_product.php">
+                <a class="collapse-item" href="../reports/sales_by_product.php">
                     <i class="fas fa-chart-bar"></i> Penjualan per Produk
                 </a>
-                <a class="collapse-item" href="../admin/reports/restock_expenses.php">
+                <a class="collapse-item" href="../reports/restock_expenses.php">
                     <i class="fas fa-file-invoice-dollar"></i> Pengeluaran Restock
                 </a>
-                <a class="collapse-item" href="../admin/reports/product_stock_report.php">
+                <a class="collapse-item" href="../reports/product_stock_report.php">
                     <i class="fas fa-boxes"></i> Stok Produk Saat Ini
                 </a>
-                <a class="collapse-item" href="../admin/reports/sales_by_region.php">
+                <a class="collapse-item" href="../reports/sales_by_region.php">
                     <i class="fas fa-map-marker-alt"></i> Penjualan per Wilayah
                 </a>
-                <a class="collapse-item" href="../admin/reports/profitability.php">
+                <a class="collapse-item" href="../reports/profitability.php">
                     <i class="fas fa-money-bill-wave"></i> Laporan Profitabilitas
                 </a>
             </div>
