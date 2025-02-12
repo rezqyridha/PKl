@@ -13,11 +13,11 @@ $database = new Database();
 $conn = $database->getConnection();
 
 // Query untuk menampilkan data pengeluaran restock
-$query = "SELECT p.nama_produk, r.tanggal_restock, r.jumlah_ditambahkan, r.harga_per_unit, r.total_biaya, s.nama 
-          FROM restock r 
-          JOIN produk p ON r.id_produk = p.id_produk 
-          JOIN supplier s ON r.id_supplier = s.id_supplier 
-          ORDER BY r.tanggal_restock DESC";
+$query = "SELECT p.nama_produk, p.stok, p.harga, k.nama_kategori, s.nama_satuan 
+          FROM produk p 
+          JOIN kategori k ON p.id_kategori = k.id_kategori 
+          JOIN satuan s ON p.id_satuan = s.id_satuan 
+          ORDER BY p.stok DESC";
 $stmt = $conn->prepare($query);
 $stmt->execute();
 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
