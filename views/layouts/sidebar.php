@@ -96,6 +96,12 @@ $page = $page ?? ''; // Beri nilai default kosong jika $page belum didefinisikan
             <span>Kelola Pelanggan</span>
         </a>
     </li>
+    <li class="nav-item <?= ($page == 'sales') ? 'active' : '' ?>">
+        <a class="nav-link" href="../admin/sales.php">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Kelola Penjualan</span>
+        </a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
