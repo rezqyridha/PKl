@@ -65,7 +65,7 @@ $total_biaya = array_column($data, 'total_biaya');
                         <div class="card border-left-warning shadow h-100 py-2">
                             <div class="card-body">
                                 <h6 class="text-warning">Produk dengan Pengeluaran Tertinggi</h6>
-                                <h5 class="font-weight-bold"><?= $data[0]['nama_produk'] ?? 'N/A'; ?> (Rp <?= number_format($data[0]['total_biaya'] ?? 0, 0, '', '.'); ?>)</h5>
+                                <h5 class="font-weight-bold"><?= $data[0]['nama_produk'] ?? 'N/A'; ?> <?= $data[0]['nama_satuan'] ?? 'N/A'; ?> (Pengeluaran Sebesar Rp <?= number_format($data[0]['total_biaya'] ?? 0, 0, '', '.'); ?>)</h5>
                             </div>
                         </div>
                     </div>

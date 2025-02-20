@@ -21,7 +21,7 @@ $query = "SELECT p.nama_produk, s.nama_satuan,
           FROM penjualan j 
           JOIN produk p ON j.id_produk = p.id_produk 
           JOIN satuan s ON p.id_satuan = s.id_satuan 
-          GROUP BY p.id_produk 
+          GROUP BY p.id_produk, s.nama_satuan 
           ORDER BY total_terjual DESC";
 
 $stmt = $conn->prepare($query);
@@ -50,7 +50,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
                                 <h6 class="text-info">Produk Terlaris</h6>
-                                <h5 class="font-weight-bold"><?= $data[0]['nama_produk'] ?? 'N/A'; ?> (<?= $data[0]['total_terjual'] ?? 0; ?> Botol)</h5>
+                                <h5 class="font-weight-bold"><?= $data[0]['nama_produk'] ?? 'N/A'; ?> <?= $data[0]['nama_satuan'] ?? ''; ?> (<?= $data[0]['total_terjual'] ?? 0; ?> Botol)</h5>
                             </div>
                         </div>
                     </div>
@@ -75,6 +75,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Produk</th>
+                                    <th>Satuan</th>
                                     <th>Total Terjual</th>
                                     <th>Total Pendapatan (Rp)</th>
                                 </tr>
@@ -85,6 +86,7 @@ $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <tr>
                                         <td><?= $no++; ?></td>
                                         <td><?= htmlspecialchars($row['nama_produk']); ?></td>
+                                        <td><?= htmlspecialchars($row['nama_satuan']); ?></td>
                                         <td><?= $row['total_terjual']; ?> Botol</td>
                                         <td>Rp <?= number_format($row['total_pendapatan'], 0, '', '.'); ?></td>
                                     </tr>

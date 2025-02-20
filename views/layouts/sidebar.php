@@ -90,16 +90,22 @@ $page = $page ?? ''; // Beri nilai default kosong jika $page belum didefinisikan
             <span>Kelola Supplier</span>
         </a>
     </li>
-    <li class="nav-item <?= ($page == 'customers') ? 'active' : '' ?>">
-        <a class="nav-link" href="../admin/customers.php">
-            <i class="fas fa-users"></i>
-            <span>Kelola Pelanggan</span>
+    <li class="nav-item <?= ($page == 'restock') ? 'active' : '' ?>">
+        <a class="nav-link" href="../admin/restock.php">
+            <i class="fas fa-boxes"></i>
+            <span>Kelola Restock</span>
         </a>
     </li>
     <li class="nav-item <?= ($page == 'sales') ? 'active' : '' ?>">
         <a class="nav-link" href="../admin/sales.php">
             <i class="fas fa-shopping-cart"></i>
             <span>Kelola Penjualan</span>
+        </a>
+    </li>
+    <li class="nav-item <?= ($page == 'customers') ? 'active' : '' ?>">
+        <a class="nav-link" href="../admin/customers.php">
+            <i class="fas fa-users"></i>
+            <span>Kelola Pelanggan</span>
         </a>
     </li>
 

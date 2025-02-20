@@ -15,7 +15,7 @@ $userModel = new UserModel($conn);
 $user = $userModel->getUserById($_SESSION['user_id']);
 
 // Query untuk mendapatkan data profitabilitas per produk
-$query = "SELECT p.nama_produk, 
+$query = "SELECT p.nama_produk, s.nama_satuan, 
        SUM(j.jumlah_terjual) AS total_terjual, 
        SUM(j.total_harga) AS total_pendapatan, 
        (SUM(j.total_harga) - 
@@ -24,7 +24,8 @@ $query = "SELECT p.nama_produk,
          WHERE r.id_produk = p.id_produk)) AS profit
 FROM penjualan j 
 JOIN produk p ON j.id_produk = p.id_produk 
-GROUP BY p.id_produk 
+JOIN satuan s ON p.id_satuan = s.id_satuan 
+GROUP BY p.id_produk, s.nama_satuan
 ORDER BY profit DESC;
 ";
 
@@ -53,7 +54,7 @@ $total_profit = array_column($data, 'profit');
                         <div class="card border-left-info shadow h-100 py-2">
                             <div class="card-body">
                                 <h6 class="text-info">Produk Paling Menguntungkan</h6>
-                                <h5 class="font-weight-bold"><?= $data[0]['nama_produk'] ?? 'N/A'; ?> (Rp <?= number_format($data[0]['profit'] ?? 0, 0, '', '.'); ?>)</h5>
+                                <h5 class="font-weight-bold"><?= $data[0]['nama_produk'] ?? 'N/A'; ?> <?= $data[0]['nama_satuan'] ?? ''; ?> (Keuntungan Rp <?= number_format($data[0]['profit'] ?? 0, 0, '', '.'); ?>)</h5>
                             </div>
                         </div>
                     </div>
@@ -78,6 +79,8 @@ $total_profit = array_column($data, 'profit');
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Produk</th>
+                                    <th>Satuan</th>
+                                    <th>Total Terjual</th>
                                     <th>Total Pendapatan (Rp)</th>
                                     <th>Total Profit (Rp)</th>
                                 </tr>
@@ -88,6 +91,8 @@ $total_profit = array_column($data, 'profit');
                                     <tr>
                                         <td><?= $no++; ?></td>
                                         <td><?= htmlspecialchars($row['nama_produk']); ?></td>
+                                        <td><?= htmlspecialchars($row['nama_satuan']); ?></td>
+                                        <td><?= $row['total_terjual']; ?> Botol</td>
                                         <td>Rp <?= number_format($row['total_pendapatan'], 0, '', '.'); ?></td>
                                         <td>Rp <?= number_format($row['profit'], 0, '', '.'); ?></td>
                                     </tr>

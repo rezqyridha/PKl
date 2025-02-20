@@ -15,7 +15,7 @@ $userModel = new UserModel($db);
 $user = $userModel->getUserById($_SESSION['user_id']);
 
 // Tentukan URL dashboard sesuai dengan role
-$dashboardUrl = ($user['role'] === 'karyawan') ? '../employee/dashboard.php' : '../admin/dashboard.php';
+$dashboardUrl = ($user['role'] === 'karyawan') ? '../employee/dashboard_karyawan.php' : '../admin/dashboard.php';
 ?>
 
 <?php include '../layouts/header.php'; ?>

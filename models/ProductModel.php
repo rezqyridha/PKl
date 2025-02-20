@@ -200,11 +200,17 @@ class ProductModel
      */
     public function getLowStockProducts()
     {
-        $query = "SELECT id_produk, nama_produk, stok FROM produk WHERE stok <= " . self::STOK_MINIMUM . " ORDER BY stok ASC";
+        $query = "SELECT p.id_produk, p.nama_produk, p.stok, s.nama_satuan 
+              FROM produk p
+              LEFT JOIN satuan s ON p.id_satuan = s.id_satuan
+              WHERE p.stok <= " . self::STOK_MINIMUM . " 
+              ORDER BY p.stok ASC";
+
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     /* ============================= */
     /*     FUNGSI PENGOLAHAN DATA    */
